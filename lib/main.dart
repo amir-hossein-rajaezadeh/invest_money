@@ -28,7 +28,85 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
+  late Animation<Offset> firstRightToLeftAnim;
+  late AnimationController firstRightToLeftAnimController;
+  late Animation<Offset> secondRightToLeftAnim;
+  late Animation<Offset> rightBoxAnim;
+  late Animation<Offset> leftBoxAnim;
+  late Animation<Offset> rightToLeftListviewAnim;
+  late AnimationController rightToLeftListviewController;
+  late AnimationController boxesController;
+
+  bool showListView = false;
+  @override
+  void initState() {
+    firstRightToLeftAnimController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    );
+
+    boxesController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1500),
+    );
+    rightToLeftListviewController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1500),
+    );
+    firstRightToLeftAnim = Tween(
+      begin: const Offset(2, 0),
+      end: const Offset(-1, 0),
+    ).animate(CurvedAnimation(
+        parent: firstRightToLeftAnimController, curve: Curves.easeOut));
+
+    secondRightToLeftAnim = Tween(
+      begin: const Offset(-2, 0),
+      end: const Offset(1, 0),
+    ).animate(CurvedAnimation(
+        parent: firstRightToLeftAnimController, curve: Curves.easeOut));
+
+    rightBoxAnim = Tween(
+      begin: const Offset(8, 0),
+      end: const Offset(0, 0),
+    ).animate(CurvedAnimation(parent: boxesController, curve: Curves.easeOut));
+
+    leftBoxAnim = Tween(
+      begin: const Offset(-2, 0),
+      end: const Offset(0, 0),
+    ).animate(CurvedAnimation(parent: boxesController, curve: Curves.easeOut));
+    boxesController.forward();
+
+    rightToLeftListviewAnim = Tween(
+      begin: const Offset(2, 0),
+      end: const Offset(0, 0),
+    ).animate(rightToLeftListviewController);
+
+    rightToLeftListviewController.forward();
+    firstRightToLeftAnimController.forward();
+
+    // rightBoxAnim.addStatusListener((status) {
+    //   if (status == AnimationStatus.completed) {
+    //     rightToLeftListviewController.forward();
+    //   }
+    // });
+    // rightToLeftListviewAnim.addStatusListener((status) {
+    //   if (status == AnimationStatus.completed) {
+    //     firstRightToLeftAnimController.forward();
+    //   }
+    // });
+
+    firstRightToLeftAnimController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        setState(() {
+          showListView = true;
+        });
+      }
+    });
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     double? height = MediaQuery.of(context).size.height;
@@ -58,7 +136,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       Color(0xFF051ed9),
                     ],
                   )),
-              height: height / 2 - 90,
+              height: height / 2 - 120,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -75,7 +153,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               style: TextStyle(
                                   fontSize: 30,
                                   color: Colors.white,
-                                  fontWeight: FontWeight.w300),
+                                  fontWeight: FontWeight.w400),
                             ),
                             SizedBox(
                               height: 8,
@@ -105,7 +183,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ],
                   ),
                   Container(
-                      margin: const EdgeInsets.only(left: 20, bottom: 60),
+                      margin: const EdgeInsets.only(left: 20, bottom: 30),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -138,100 +216,306 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
               ),
             ),
-            Container(
-              margin: const EdgeInsets.only(right: 5, left: 5, top: 12),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      width: width / 2 - 10,
-                      height: height * .18,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(40),
-                          color: const Color(0xFF0a0720)),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text(
-                            "Top Up",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.white, fontSize: 18),
-                          ),
-                          Container(
-                            width: 10,
-                          ),
-                          RotatedBox(
-                            quarterTurns: 1,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                border:
-                                    Border.all(color: Colors.white, width: 1.5),
-                                borderRadius: BorderRadius.circular(7),
-                              ),
+            SlideTransition(
+              position: leftBoxAnim,
+              child: Container(
+                margin: const EdgeInsets.only(right: 5, left: 5, top: 12),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        width: width / 2 - 10,
+                        height: height * .18,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(40),
+                            color: const Color(0xFF0a0720)),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text(
+                              "Top Up",
+                              textAlign: TextAlign.center,
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 18),
+                            ),
+                            Container(
+                              width: 10,
+                            ),
+                            RotatedBox(
+                              quarterTurns: 1,
                               child: Container(
-                                margin: const EdgeInsets.all(3),
-                                child: const Icon(
-                                  Icons.arrow_outward,
-                                  size: 14,
-                                  color: Colors.white,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: Colors.white, width: 1.5),
+                                  borderRadius: BorderRadius.circular(7),
+                                ),
+                                child: Container(
+                                  margin: const EdgeInsets.all(3),
+                                  child: const Icon(
+                                    Icons.arrow_outward,
+                                    size: 14,
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
-                            ),
-                          )
-                        ],
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                    Container(
-                      width: width / 2 - 10,
-                      height: height * .18,
+                      SlideTransition(
+                        position: rightBoxAnim,
+                        child: Container(
+                          width: width / 2 - 10,
+                          height: height * .18,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(40),
+                              color: const Color(0xFF0a0720)),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text(
+                                "Withdraw",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 18),
+                              ),
+                              Container(
+                                width: 10,
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: Colors.white, width: 1.5),
+                                  borderRadius: BorderRadius.circular(7),
+                                ),
+                                child: Container(
+                                  margin: const EdgeInsets.all(3),
+                                  child: const Icon(
+                                    Icons.arrow_outward,
+                                    size: 14,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ]),
+              ),
+            ),
+            SlideTransition(
+              position: rightToLeftListviewAnim,
+              child: Container(
+                height: 80,
+                margin: const EdgeInsets.only(top: 20),
+                child: ListView.builder(
+                  physics: const BouncingScrollPhysics(),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: 15,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      margin:
+                          EdgeInsets.only(right: 15, left: index == 0 ? 55 : 0),
+                      width: 215,
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(40),
-                          color: const Color(0xFF0a0720)),
+                        color: const Color(0xFF0a0720),
+                        borderRadius: BorderRadius.circular(100),
+                      ),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text(
-                            "Withdraw",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.white, fontSize: 18),
-                          ),
                           Container(
-                            width: 10,
-                          ),
-                          Container(
+                            margin: const EdgeInsets.only(left: 12),
+                            width: 55,
+                            height: 55,
                             decoration: BoxDecoration(
-                              border:
-                                  Border.all(color: Colors.white, width: 1.5),
-                              borderRadius: BorderRadius.circular(7),
+                              borderRadius: BorderRadius.circular(100),
+                              color: const Color(0xFF1b193d),
                             ),
-                            child: Container(
-                              margin: const EdgeInsets.all(3),
-                              child: const Icon(
-                                Icons.arrow_outward,
-                                size: 14,
-                                color: Colors.white,
+                            child: const Center(
+                              child: Text(
+                                "G",
+                                style: TextStyle(
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white),
                               ),
                             ),
-                          )
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(top: 12, left: 12),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  "Google",
+                                  style: TextStyle(
+                                      fontSize: 20, color: Color(0xFF47417d)),
+                                ),
+                                Container(
+                                  margin: const EdgeInsets.only(top: 10),
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        "100,27",
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            color:
+                                                Colors.white.withOpacity(0.8),
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                      Container(
+                                        margin: const EdgeInsets.only(left: 8),
+                                        child: Text(
+                                          "+0,53%",
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              color:
+                                                  Colors.white.withOpacity(0.6),
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+            Stack(
+              children: [
+                // if (showListView)
+                //   Container(
+                //     height: 80,
+                //     margin: const EdgeInsets.only(top: 20),
+                //     child: ListView.builder(
+                //       physics: const BouncingScrollPhysics(),
+                //       scrollDirection: Axis.horizontal,
+                //       itemCount: 15,
+                //       itemBuilder: (context, index) {
+                //         return Container(
+                //           margin: EdgeInsets.only(
+                //               right: 0, left: index == 0 ? 0 : 0),
+                //           width: 215,
+                //           decoration: BoxDecoration(
+                //             color: const Color(0xFF0a0720),
+                //             borderRadius: BorderRadius.circular(100),
+                //           ),
+                //           child: Row(
+                //             children: [
+                //               Container(
+                //                 margin: const EdgeInsets.only(left: 12),
+                //                 width: 55,
+                //                 height: 55,
+                //                 decoration: BoxDecoration(
+                //                   borderRadius: BorderRadius.circular(100),
+                //                   color: const Color(0xFF1b193d),
+                //                 ),
+                //                 child: const Center(
+                //                   child: Text(
+                //                     "G",
+                //                     style: TextStyle(
+                //                         fontSize: 22,
+                //                         fontWeight: FontWeight.w700,
+                //                         color: Colors.white),
+                //                   ),
+                //                 ),
+                //               ),
+                //               Container(
+                //                 margin:
+                //                     const EdgeInsets.only(top: 12, left: 12),
+                //                 child: Column(
+                //                   crossAxisAlignment: CrossAxisAlignment.start,
+                //                   children: [
+                //                     const Text(
+                //                       "Google",
+                //                       style: TextStyle(
+                //                           fontSize: 20,
+                //                           color: Color(0xFF47417d)),
+                //                     ),
+                //                     Container(
+                //                       margin: const EdgeInsets.only(top: 10),
+                //                       child: Row(
+                //                         children: [
+                //                           Text(
+                //                             "100,27",
+                //                             style: TextStyle(
+                //                                 fontSize: 16,
+                //                                 color: Colors.white
+                //                                     .withOpacity(0.8),
+                //                                 fontWeight: FontWeight.w500),
+                //                           ),
+                //                           Container(
+                //                             margin:
+                //                                 const EdgeInsets.only(left: 8),
+                //                             child: Text(
+                //                               "+0,53%",
+                //                               style: TextStyle(
+                //                                   fontSize: 14,
+                //                                   color: Colors.white
+                //                                       .withOpacity(0.6),
+                //                                   fontWeight: FontWeight.w500),
+                //                             ),
+                //                           )
+                //                         ],
+                //                       ),
+                //                     )
+                //                   ],
+                //                 ),
+                //               ),
+                //             ],
+                //           ),
+                //         );
+                //       },
+                //     ),
+                //   ),
+                SlideTransition(
+                  position: firstRightToLeftAnim,
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 20),
+                    width: 215,
+                    height: 80,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      gradient: const LinearGradient(
+                        begin: Alignment.topRight,
+                        end: Alignment.topLeft,
+                        colors: [
+                          Color(0xFF3fdcd6),
+                          Color(0xFF48eace),
+                          Color(0xFF90e6cf)
                         ],
                       ),
                     ),
-                  ]),
+                  ),
+                ),
+              ],
             ),
-            Container(
-              height: 80,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: 15,
-                itemBuilder: (context, index) {
-                  return Container(
-                    width: 150,
-                    height: 60,
-                    decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(100)),
-                  );
-                },
+            SlideTransition(
+              position: secondRightToLeftAnim,
+              child: Container(
+                margin: const EdgeInsets.only(top: 12),
+                width: 215,
+                height: 80,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(100),
+                  gradient: const LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Color(0xFF5810df),
+                      Color(0xFF4f0cdc),
+                      Color(0xFF3d06db),
+                      Color(0xFF0e07ca)
+                    ],
+                  ),
+                ),
               ),
             )
           ],
