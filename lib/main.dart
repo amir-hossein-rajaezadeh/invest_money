@@ -73,7 +73,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
     firstRightToLeftAnimController = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 2),
+      duration: const Duration(milliseconds: 2),
     );
 
     boxesController = AnimationController(
@@ -105,13 +105,12 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       begin: const Offset(-2, 0),
       end: const Offset(0, 0),
     ).animate(CurvedAnimation(parent: boxesController, curve: Curves.easeOut));
-    boxesController.forward();
 
     rightToLeftListviewAnim = Tween(
       begin: const Offset(2, 0),
       end: const Offset(0, 0),
     ).animate(rightToLeftListviewController);
-
+    boxesController.forward();
     rightToLeftListviewController.forward();
     firstRightToLeftAnimController.forward();
 
