@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 void main() {
@@ -29,7 +31,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
-  late ScrollController _controller; // <--
+  late ScrollController _firstScrollController;
+  late ScrollController _secondScrollController;
 
   late Animation<Offset> firstRightToLeftAnim;
   late AnimationController firstRightToLeftAnimController;
@@ -51,21 +54,22 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     "Yandex",
   ];
 
-  List<String> thirdBrandList = ["Amazon", "Facebok", "Twitter"];
-  // late ScrollController _controller;
+  List<String> thirdBrandList = ["Amazon", "Facebok", "Twitter", ""];
   bool isFirstTry = true;
 
   bool showListView = false;
 
   @override
   void dispose() {
-    _controller.dispose();
+    _firstScrollController.dispose();
+    _secondScrollController.dispose();
     super.dispose();
   }
 
   @override
   void initState() {
-    _controller = ScrollController(initialScrollOffset: 155.0);
+    _firstScrollController = ScrollController(initialScrollOffset: 155.0);
+    _secondScrollController = ScrollController(initialScrollOffset: 372.0);
 
     firstRightToLeftAnimController = AnimationController(
       vsync: this,
@@ -128,27 +132,30 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         });
       }
     });
-    // _controller.addListener(() {});
+
+    Future.delayed(const Duration(milliseconds: 50))
+        .then((value) => setState(() {
+              _height = 300;
+            }));
     super.initState();
   }
 
+  double _height = 0;
   @override
   Widget build(BuildContext context) {
     double? height = MediaQuery.of(context).size.height;
     double? width = MediaQuery.of(context).size.width;
-
     if (isFirstTry) {
       isFirstTry = false;
-      // _controller.jumpTo(200);
     }
-
     return SafeArea(
       child: Scaffold(
         backgroundColor: const Color(0xFF070713),
         body: Column(
           children: [
             AnimatedContainer(
-              duration: const Duration(seconds: 1),
+              height: _height,
+              duration: const Duration(milliseconds: 1500),
               margin: const EdgeInsets.only(right: 3, left: 3),
               decoration: const BoxDecoration(
                   borderRadius: BorderRadius.only(
@@ -166,7 +173,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                       Color(0xFF051ed9),
                     ],
                   )),
-              height: height / 2 - 120,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -295,7 +301,11 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                       SlideTransition(
                         position: rightBoxAnim,
                         child: InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            setState(() {
+                              _height = height / 2 - 120;
+                            });
+                          },
                           child: Container(
                             width: width / 2 - 10,
                             height: height * .18,
@@ -430,7 +440,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                     margin: const EdgeInsets.only(top: 20),
                     child: ListView.builder(
                       shrinkWrap: true,
-                      controller: _controller,
+                      controller: _firstScrollController,
                       physics: const BouncingScrollPhysics(),
                       scrollDirection: Axis.horizontal,
                       itemCount: secondBrndList.length,
@@ -563,9 +573,10 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                   ),
             showListView
                 ? Container(
-                    height: 85,
-                    margin: const EdgeInsets.only(top: 20),
+                    height: 80,
+                    margin: const EdgeInsets.only(top: 15),
                     child: ListView.builder(
+                      controller: _secondScrollController,
                       shrinkWrap: true,
                       physics: const BouncingScrollPhysics(),
                       scrollDirection: Axis.horizontal,
@@ -573,23 +584,26 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                       itemBuilder: (context, index) {
                         String title = thirdBrandList[index];
 
-                        return index == 0
+                        return title == ""
                             ? Container(
-                                height: 85,
-                                margin: const EdgeInsets.only(top: 20),
-                                width: 215,
+                                height: 80,
+                                margin: EdgeInsets.only(
+                                    right: 0, left: index == 0 ? 40 : 0),
+                                width: 210,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(100),
                                   gradient: const LinearGradient(
-                                    begin: Alignment.topRight,
-                                    end: Alignment.topLeft,
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
                                     colors: [
-                                      Color(0xFF3fdcd6),
-                                      Color(0xFF48eace),
-                                      Color(0xFF90e6cf)
+                                      Color(0xFF5810df),
+                                      Color(0xFF4f0cdc),
+                                      Color(0xFF3d06db),
+                                      Color(0xFF0e07ca)
                                     ],
                                   ),
                                 ),
+                                child: Row(children: []),
                               )
                             : Container(
                                 height: 80,
@@ -676,7 +690,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                 : SlideTransition(
                     position: secondRightToLeftAnim,
                     child: Container(
-                      margin: const EdgeInsets.only(top: 12),
+                      margin: const EdgeInsets.only(top: 15),
                       width: 215,
                       height: 80,
                       decoration: BoxDecoration(
