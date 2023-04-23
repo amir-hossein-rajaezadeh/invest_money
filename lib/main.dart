@@ -29,6 +29,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
+  late ScrollController _controller; // <--
+
   late Animation<Offset> firstRightToLeftAnim;
   late AnimationController firstRightToLeftAnimController;
   late Animation<Offset> secondRightToLeftAnim;
@@ -38,9 +40,33 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   late AnimationController rightToLeftListviewController;
   late AnimationController boxesController;
 
+  List<String> firstBrndList = [
+    "Google",
+    "Shopify",
+  ];
+  List<String> secondBrndList = [
+    "",
+    "Apple",
+    "DropBox",
+    "Yandex",
+  ];
+
+  List<String> thirdBrandList = ["Amazon", "Facebok", "Twitter"];
+  // late ScrollController _controller;
+  bool isFirstTry = true;
+
   bool showListView = false;
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   void initState() {
+    _controller = ScrollController(initialScrollOffset: 155.0);
+
     firstRightToLeftAnimController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 2),
@@ -92,7 +118,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     // });
     // rightToLeftListviewAnim.addStatusListener((status) {
     //   if (status == AnimationStatus.completed) {
-    //     firstRightToLeftAnimController.forward();
     //   }
     // });
 
@@ -103,7 +128,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         });
       }
     });
-
+    // _controller.addListener(() {});
     super.initState();
   }
 
@@ -111,6 +136,11 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     double? height = MediaQuery.of(context).size.height;
     double? width = MediaQuery.of(context).size.width;
+
+    if (isFirstTry) {
+      isFirstTry = false;
+      // _controller.jumpTo(200);
+    }
 
     return SafeArea(
       child: Scaffold(
@@ -264,40 +294,43 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                       ),
                       SlideTransition(
                         position: rightBoxAnim,
-                        child: Container(
-                          width: width / 2 - 10,
-                          height: height * .18,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(40),
-                              color: const Color(0xFF0a0720)),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Text(
-                                "Withdraw",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 18),
-                              ),
-                              Container(
-                                width: 10,
-                              ),
-                              Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: Colors.white, width: 1.5),
-                                  borderRadius: BorderRadius.circular(7),
+                        child: InkWell(
+                          onTap: () {},
+                          child: Container(
+                            width: width / 2 - 10,
+                            height: height * .18,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(40),
+                                color: const Color(0xFF0a0720)),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text(
+                                  "Withdraw",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 18),
                                 ),
-                                child: Container(
-                                  margin: const EdgeInsets.all(3),
-                                  child: const Icon(
-                                    Icons.arrow_outward,
-                                    size: 14,
-                                    color: Colors.white,
+                                Container(
+                                  width: 10,
+                                ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: Colors.white, width: 1.5),
+                                    borderRadius: BorderRadius.circular(7),
                                   ),
-                                ),
-                              )
-                            ],
+                                  child: Container(
+                                    margin: const EdgeInsets.all(3),
+                                    child: const Icon(
+                                      Icons.arrow_outward,
+                                      size: 14,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -312,8 +345,9 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                 child: ListView.builder(
                   physics: const BouncingScrollPhysics(),
                   scrollDirection: Axis.horizontal,
-                  itemCount: 15,
+                  itemCount: firstBrndList.length,
                   itemBuilder: (context, index) {
+                    String title = firstBrndList[index];
                     return Container(
                       margin:
                           EdgeInsets.only(right: 15, left: index == 0 ? 55 : 0),
@@ -347,10 +381,12 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  "Google",
-                                  style: TextStyle(
-                                      fontSize: 20, color: Color(0xFF47417d)),
+                                Text(
+                                  title,
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    color: Color(0xFF47417d),
+                                  ),
                                 ),
                                 Container(
                                   margin: const EdgeInsets.only(top: 10),
@@ -388,136 +424,276 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                 ),
               ),
             ),
-            Stack(
-              children: [
-                // if (showListView)
-                //   Container(
-                //     height: 80,
-                //     margin: const EdgeInsets.only(top: 20),
-                //     child: ListView.builder(
-                //       physics: const BouncingScrollPhysics(),
-                //       scrollDirection: Axis.horizontal,
-                //       itemCount: 15,
-                //       itemBuilder: (context, index) {
-                //         return Container(
-                //           margin: EdgeInsets.only(
-                //               right: 0, left: index == 0 ? 0 : 0),
-                //           width: 215,
-                //           decoration: BoxDecoration(
-                //             color: const Color(0xFF0a0720),
-                //             borderRadius: BorderRadius.circular(100),
-                //           ),
-                //           child: Row(
-                //             children: [
-                //               Container(
-                //                 margin: const EdgeInsets.only(left: 12),
-                //                 width: 55,
-                //                 height: 55,
-                //                 decoration: BoxDecoration(
-                //                   borderRadius: BorderRadius.circular(100),
-                //                   color: const Color(0xFF1b193d),
-                //                 ),
-                //                 child: const Center(
-                //                   child: Text(
-                //                     "G",
-                //                     style: TextStyle(
-                //                         fontSize: 22,
-                //                         fontWeight: FontWeight.w700,
-                //                         color: Colors.white),
-                //                   ),
-                //                 ),
-                //               ),
-                //               Container(
-                //                 margin:
-                //                     const EdgeInsets.only(top: 12, left: 12),
-                //                 child: Column(
-                //                   crossAxisAlignment: CrossAxisAlignment.start,
-                //                   children: [
-                //                     const Text(
-                //                       "Google",
-                //                       style: TextStyle(
-                //                           fontSize: 20,
-                //                           color: Color(0xFF47417d)),
-                //                     ),
-                //                     Container(
-                //                       margin: const EdgeInsets.only(top: 10),
-                //                       child: Row(
-                //                         children: [
-                //                           Text(
-                //                             "100,27",
-                //                             style: TextStyle(
-                //                                 fontSize: 16,
-                //                                 color: Colors.white
-                //                                     .withOpacity(0.8),
-                //                                 fontWeight: FontWeight.w500),
-                //                           ),
-                //                           Container(
-                //                             margin:
-                //                                 const EdgeInsets.only(left: 8),
-                //                             child: Text(
-                //                               "+0,53%",
-                //                               style: TextStyle(
-                //                                   fontSize: 14,
-                //                                   color: Colors.white
-                //                                       .withOpacity(0.6),
-                //                                   fontWeight: FontWeight.w500),
-                //                             ),
-                //                           )
-                //                         ],
-                //                       ),
-                //                     )
-                //                   ],
-                //                 ),
-                //               ),
-                //             ],
-                //           ),
-                //         );
-                //       },
-                //     ),
-                //   ),
-                SlideTransition(
-                  position: firstRightToLeftAnim,
-                  child: Container(
-                    margin: const EdgeInsets.only(top: 20),
-                    width: 215,
+            showListView
+                ? Container(
                     height: 80,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
-                      gradient: const LinearGradient(
-                        begin: Alignment.topRight,
-                        end: Alignment.topLeft,
-                        colors: [
-                          Color(0xFF3fdcd6),
-                          Color(0xFF48eace),
-                          Color(0xFF90e6cf)
-                        ],
+                    margin: const EdgeInsets.only(top: 20),
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      controller: _controller,
+                      physics: const BouncingScrollPhysics(),
+                      scrollDirection: Axis.horizontal,
+                      itemCount: secondBrndList.length,
+                      itemBuilder: (context, index) {
+                        String title = secondBrndList[index];
+
+                        return index == 0
+                            ? Container(
+                                height: 80,
+                                margin: EdgeInsets.only(
+                                    right: 0, left: index == 0 ? 40 : 0),
+                                width: 215,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(100),
+                                  gradient: const LinearGradient(
+                                    begin: Alignment.topRight,
+                                    end: Alignment.topLeft,
+                                    colors: [
+                                      Color(0xFF3fdcd6),
+                                      Color(0xFF48eace),
+                                      Color(0xFF90e6cf)
+                                    ],
+                                  ),
+                                ),
+                                child: Row(
+                                  children: [],
+                                ),
+                              )
+                            : Container(
+                                height: 80,
+                                margin: EdgeInsets.only(
+                                    right: 0, left: index == 0 ? 40 : 0),
+                                width: 215,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF0a0720),
+                                  borderRadius: BorderRadius.circular(100),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.only(left: 12),
+                                      width: 55,
+                                      height: 55,
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                        color: const Color(0xFF1b193d),
+                                      ),
+                                      child: const Center(
+                                        child: Text(
+                                          "G",
+                                          style: TextStyle(
+                                              fontSize: 22,
+                                              fontWeight: FontWeight.w700,
+                                              color: Colors.white),
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          top: 12, left: 12),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            title,
+                                            style: TextStyle(
+                                                fontSize: 20,
+                                                color: Color(0xFF47417d)),
+                                          ),
+                                          Container(
+                                            margin:
+                                                const EdgeInsets.only(top: 10),
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  "100,27",
+                                                  style: TextStyle(
+                                                      fontSize: 16,
+                                                      color: Colors.white
+                                                          .withOpacity(0.8),
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                ),
+                                                Container(
+                                                  margin: const EdgeInsets.only(
+                                                      left: 8),
+                                                  child: Text(
+                                                    "+0,53%",
+                                                    style: TextStyle(
+                                                        fontSize: 14,
+                                                        color: Colors.white
+                                                            .withOpacity(0.6),
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                      },
+                    ),
+                  )
+                : SlideTransition(
+                    position: firstRightToLeftAnim,
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 20),
+                      width: 215,
+                      height: 80,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        gradient: const LinearGradient(
+                          begin: Alignment.topRight,
+                          end: Alignment.topLeft,
+                          colors: [
+                            Color(0xFF3fdcd6),
+                            Color(0xFF48eace),
+                            Color(0xFF90e6cf)
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            SlideTransition(
-              position: secondRightToLeftAnim,
-              child: Container(
-                margin: const EdgeInsets.only(top: 12),
-                width: 215,
-                height: 80,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(100),
-                  gradient: const LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Color(0xFF5810df),
-                      Color(0xFF4f0cdc),
-                      Color(0xFF3d06db),
-                      Color(0xFF0e07ca)
-                    ],
-                  ),
-                ),
-              ),
-            )
+            showListView
+                ? Container(
+                    height: 85,
+                    margin: const EdgeInsets.only(top: 20),
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      physics: const BouncingScrollPhysics(),
+                      scrollDirection: Axis.horizontal,
+                      itemCount: thirdBrandList.length,
+                      itemBuilder: (context, index) {
+                        String title = thirdBrandList[index];
+
+                        return index == 0
+                            ? Container(
+                                height: 85,
+                                margin: const EdgeInsets.only(top: 20),
+                                width: 215,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(100),
+                                  gradient: const LinearGradient(
+                                    begin: Alignment.topRight,
+                                    end: Alignment.topLeft,
+                                    colors: [
+                                      Color(0xFF3fdcd6),
+                                      Color(0xFF48eace),
+                                      Color(0xFF90e6cf)
+                                    ],
+                                  ),
+                                ),
+                              )
+                            : Container(
+                                height: 80,
+                                margin: EdgeInsets.only(
+                                    right: 0, left: index == 0 ? 40 : 0),
+                                width: 215,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF0a0720),
+                                  borderRadius: BorderRadius.circular(100),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.only(left: 12),
+                                      width: 55,
+                                      height: 55,
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                        color: const Color(0xFF1b193d),
+                                      ),
+                                      child: const Center(
+                                        child: Text(
+                                          "G",
+                                          style: TextStyle(
+                                              fontSize: 22,
+                                              fontWeight: FontWeight.w700,
+                                              color: Colors.white),
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          top: 12, left: 12),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            title,
+                                            style: TextStyle(
+                                                fontSize: 20,
+                                                color: Color(0xFF47417d)),
+                                          ),
+                                          Container(
+                                            margin:
+                                                const EdgeInsets.only(top: 10),
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  "100,27",
+                                                  style: TextStyle(
+                                                      fontSize: 16,
+                                                      color: Colors.white
+                                                          .withOpacity(0.8),
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                ),
+                                                Container(
+                                                  margin: const EdgeInsets.only(
+                                                      left: 8),
+                                                  child: Text(
+                                                    "+0,53%",
+                                                    style: TextStyle(
+                                                        fontSize: 14,
+                                                        color: Colors.white
+                                                            .withOpacity(0.6),
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                      },
+                    ),
+                  )
+                : SlideTransition(
+                    position: secondRightToLeftAnim,
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 12),
+                      width: 215,
+                      height: 80,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        gradient: const LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            Color(0xFF5810df),
+                            Color(0xFF4f0cdc),
+                            Color(0xFF3d06db),
+                            Color(0xFF0e07ca)
+                          ],
+                        ),
+                      ),
+                    ),
+                  )
           ],
         ),
       ),
