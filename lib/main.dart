@@ -73,7 +73,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
     firstRightToLeftAnimController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 2),
+      duration: const Duration(seconds: 2),
     );
 
     boxesController = AnimationController(
@@ -110,9 +110,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       begin: const Offset(2, 0),
       end: const Offset(0, 0),
     ).animate(rightToLeftListviewController);
-    boxesController.forward();
-    rightToLeftListviewController.forward();
-    firstRightToLeftAnimController.forward();
 
     // rightBoxAnim.addStatusListener((status) {
     //   if (status == AnimationStatus.completed) {
@@ -124,6 +121,16 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     //   }
     // });
 
+    Future.delayed(Duration(microseconds: 0)).then((value) async {
+      setState(() {
+        _height = 300;
+      });
+      await Future.delayed(Duration(milliseconds: 1500));
+      boxesController.forward();
+      rightToLeftListviewController.forward();
+      firstRightToLeftAnimController.forward();
+    });
+
     firstRightToLeftAnimController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         setState(() {
@@ -131,11 +138,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         });
       }
     });
-
-    Future.delayed(const Duration(milliseconds: 50))
-        .then((value) => setState(() {
-              _height = 300;
-            }));
     super.initState();
   }
 
