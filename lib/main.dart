@@ -55,9 +55,12 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   ];
 
   List<String> thirdBrandList = ["Amazon", "Facebok", "Twitter", ""];
-  bool isFirstTry = true;
+  bool showDialogScreen = false;
 
   bool showListView = false;
+
+  double dialogWidth = 0;
+  double dialogHeight = 0;
 
   @override
   void dispose() {
@@ -148,169 +151,123 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     double? height = MediaQuery.of(context).size.height;
     double? width = MediaQuery.of(context).size.width;
-    if (isFirstTry) {
-      isFirstTry = false;
-    }
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: const Color(0xFF070713),
-        body: Column(
+        body: Stack(
+          alignment: Alignment.center,
           children: [
-            AnimatedContainer(
-              height: _height,
-              duration: const Duration(milliseconds: 1500),
-              margin: const EdgeInsets.only(right: 3, left: 3),
-              decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(40),
-                    bottomRight: Radius.circular(40),
-                  ),
-                  gradient: LinearGradient(
-                    begin: Alignment.topRight,
-                    end: Alignment.bottomLeft,
-                    colors: [
-                      Color(0xFF1edee4),
-                      Color(0xFF1edee4),
-                      Color(0xFF1799d7),
-                      Color(0xFF1786db),
-                      Color(0xFF051ed9),
-                    ],
-                  )),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
+            Column(
+              children: [
+                AnimatedContainer(
+                  height: _height,
+                  duration: const Duration(milliseconds: 1500),
+                  margin: const EdgeInsets.only(right: 3, left: 3),
+                  decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(40),
+                        bottomRight: Radius.circular(40),
+                      ),
+                      gradient: LinearGradient(
+                        begin: Alignment.topRight,
+                        end: Alignment.bottomLeft,
+                        colors: [
+                          Color(0xFF1edee4),
+                          Color(0xFF1edee4),
+                          Color(0xFF1799d7),
+                          Color(0xFF1786db),
+                          Color(0xFF051ed9),
+                        ],
+                      )),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Container(
-                        margin: const EdgeInsets.only(top: 23, left: 12),
-                        child: Column(
-                          children: const [
-                            Text(
-                              "Hello, Amir!",
-                              style: TextStyle(
-                                  fontSize: 30,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w400),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(top: 23, left: 12),
+                            child: Column(
+                              children: const [
+                                Text(
+                                  "Hello, Amir!",
+                                  style: TextStyle(
+                                      fontSize: 30,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                                SizedBox(
+                                  height: 8,
+                                ),
+                                Text(
+                                  "Let's invest together!",
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w200),
+                                )
+                              ],
                             ),
-                            SizedBox(
-                              height: 8,
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(right: 16, top: 12),
+                            width: 60,
+                            height: 60,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(100),
+                              child: Image.asset(
+                                "assets/images/user_prof.jpeg",
+                                fit: BoxFit.cover,
+                              ),
                             ),
-                            Text(
-                              "Let's invest together!",
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w200),
-                            )
-                          ],
-                        ),
+                          )
+                        ],
                       ),
                       Container(
-                        margin: const EdgeInsets.only(right: 16, top: 12),
-                        width: 60,
-                        height: 60,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(100),
-                          child: Image.asset(
-                            "assets/images/user_prof.jpeg",
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(left: 20, bottom: 30),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "25 800",
-                          style: TextStyle(
-                              fontSize: 50,
-                              color: Colors.white.withOpacity(0.8),
-                              fontWeight: FontWeight.w400),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.only(top: 15),
-                          width: 80,
-                          height: 35,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(100),
-                            color: Colors.white.withOpacity(0.4),
-                          ),
-                          child: Center(
-                            child: Text(
-                              "+620",
-                              style: TextStyle(
-                                  color: Colors.white.withOpacity(0.9),
-                                  fontSize: 18),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ),
-            SlideTransition(
-              position: leftBoxAnim,
-              child: Container(
-                margin: const EdgeInsets.only(right: 5, left: 5, top: 12),
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        width: width / 2 - 10,
-                        height: height * .18,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(40),
-                            color: const Color(0xFF0a0720)),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                        margin: const EdgeInsets.only(left: 20, bottom: 30),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              "Top Up",
-                              textAlign: TextAlign.center,
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 18),
+                            Text(
+                              "25 800",
+                              style: TextStyle(
+                                  fontSize: 50,
+                                  color: Colors.white.withOpacity(0.8),
+                                  fontWeight: FontWeight.w400),
                             ),
                             Container(
-                              width: 10,
-                            ),
-                            RotatedBox(
-                              quarterTurns: 1,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: Colors.white, width: 1.5),
-                                  borderRadius: BorderRadius.circular(7),
-                                ),
-                                child: Container(
-                                  margin: const EdgeInsets.all(3),
-                                  child: const Icon(
-                                    Icons.arrow_outward,
-                                    size: 14,
-                                    color: Colors.white,
-                                  ),
+                              margin: const EdgeInsets.only(top: 15),
+                              width: 80,
+                              height: 35,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(100),
+                                color: Colors.white.withOpacity(0.4),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  "+620",
+                                  style: TextStyle(
+                                      color: Colors.white.withOpacity(0.9),
+                                      fontSize: 18),
                                 ),
                               ),
                             )
                           ],
                         ),
-                      ),
-                      SlideTransition(
-                        position: rightBoxAnim,
-                        child: InkWell(
-                          onTap: () {
-                            setState(() {
-                              _height = height / 2 - 120;
-                            });
-                          },
-                          child: Container(
+                      )
+                    ],
+                  ),
+                ),
+                SlideTransition(
+                  position: leftBoxAnim,
+                  child: Container(
+                    margin: const EdgeInsets.only(right: 5, left: 5, top: 12),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
                             width: width / 2 - 10,
                             height: height * .18,
                             decoration: BoxDecoration(
@@ -320,7 +277,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 const Text(
-                                  "Withdraw",
+                                  "Top Up",
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 18),
@@ -328,394 +285,510 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                 Container(
                                   width: 10,
                                 ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: Colors.white, width: 1.5),
-                                    borderRadius: BorderRadius.circular(7),
-                                  ),
+                                RotatedBox(
+                                  quarterTurns: 1,
                                   child: Container(
-                                    margin: const EdgeInsets.all(3),
-                                    child: const Icon(
-                                      Icons.arrow_outward,
-                                      size: 14,
-                                      color: Colors.white,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: Colors.white, width: 1.5),
+                                      borderRadius: BorderRadius.circular(7),
+                                    ),
+                                    child: Container(
+                                      margin: const EdgeInsets.all(3),
+                                      child: const Icon(
+                                        Icons.arrow_outward,
+                                        size: 14,
+                                        color: Colors.white,
+                                      ),
                                     ),
                                   ),
                                 )
                               ],
                             ),
                           ),
-                        ),
-                      ),
-                    ]),
-              ),
-            ),
-            SlideTransition(
-              position: rightToLeftListviewAnim,
-              child: Container(
-                height: 80,
-                margin: const EdgeInsets.only(top: 20),
-                child: ListView.builder(
-                  physics: const BouncingScrollPhysics(),
-                  scrollDirection: Axis.horizontal,
-                  itemCount: firstBrndList.length,
-                  itemBuilder: (context, index) {
-                    String title = firstBrndList[index];
-                    return Container(
-                      margin:
-                          EdgeInsets.only(right: 15, left: index == 0 ? 55 : 0),
-                      width: 215,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF0a0720),
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                      child: Row(
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.only(left: 12),
-                            width: 55,
-                            height: 55,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(100),
-                              color: const Color(0xFF1b193d),
-                            ),
-                            child: const Center(
-                              child: Text(
-                                "G",
-                                style: TextStyle(
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.white),
+                          SlideTransition(
+                            position: rightBoxAnim,
+                            child: InkWell(
+                              onTap: () {
+                                setState(() {
+                                  _height = height / 2 - 120;
+                                });
+                              },
+                              child: Container(
+                                width: width / 2 - 10,
+                                height: height * .18,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(40),
+                                    color: const Color(0xFF0a0720)),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Text(
+                                      "Withdraw",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 18),
+                                    ),
+                                    Container(
+                                      width: 10,
+                                    ),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: Colors.white, width: 1.5),
+                                        borderRadius: BorderRadius.circular(7),
+                                      ),
+                                      child: Container(
+                                        margin: const EdgeInsets.all(3),
+                                        child: const Icon(
+                                          Icons.arrow_outward,
+                                          size: 14,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                          Container(
-                            margin: const EdgeInsets.only(top: 12, left: 12),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  title,
-                                  style: const TextStyle(
-                                    fontSize: 20,
-                                    color: Color(0xFF47417d),
-                                  ),
-                                ),
-                                Container(
-                                  margin: const EdgeInsets.only(top: 10),
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        "100,27",
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            color:
-                                                Colors.white.withOpacity(0.8),
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                      Container(
-                                        margin: const EdgeInsets.only(left: 8),
-                                        child: Text(
-                                          "+0,53%",
-                                          style: TextStyle(
-                                              fontSize: 14,
-                                              color:
-                                                  Colors.white.withOpacity(0.6),
-                                              fontWeight: FontWeight.w500),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
+                        ]),
+                  ),
                 ),
-              ),
-            ),
-            showListView
-                ? Container(
+                SlideTransition(
+                  position: rightToLeftListviewAnim,
+                  child: Container(
                     height: 80,
                     margin: const EdgeInsets.only(top: 20),
                     child: ListView.builder(
-                      shrinkWrap: true,
-                      controller: _firstScrollController,
                       physics: const BouncingScrollPhysics(),
                       scrollDirection: Axis.horizontal,
-                      itemCount: secondBrndList.length,
+                      itemCount: firstBrndList.length,
                       itemBuilder: (context, index) {
-                        String title = secondBrndList[index];
-
-                        return index == 0
-                            ? Container(
-                                height: 80,
-                                margin: const EdgeInsets.only(left: 5),
-                                width: 215,
+                        String title = firstBrndList[index];
+                        return Container(
+                          margin: EdgeInsets.only(
+                              right: 15, left: index == 0 ? 55 : 0),
+                          width: 215,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF0a0720),
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.only(left: 12),
+                                width: 55,
+                                height: 55,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(100),
-                                  gradient: const LinearGradient(
-                                    begin: Alignment.topRight,
-                                    end: Alignment.topLeft,
-                                    colors: [
-                                      Color(0xFF3fdcd6),
-                                      Color(0xFF48eace),
-                                      Color(0xFF90e6cf)
-                                    ],
+                                  color: const Color(0xFF1b193d),
+                                ),
+                                child: const Center(
+                                  child: Text(
+                                    "G",
+                                    style: TextStyle(
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.white),
                                   ),
                                 ),
-                                child: Row(
-                                  children: [],
-                                ),
-                              )
-                            : Container(
-                                height: 80,
-                                margin: EdgeInsets.only(
-                                    right: 18, left: index == 0 ? 40 : 0),
-                                width: 215,
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFF0a0720),
-                                  borderRadius: BorderRadius.circular(100),
-                                ),
-                                child: Row(
+                              ),
+                              Container(
+                                margin:
+                                    const EdgeInsets.only(top: 12, left: 12),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Container(
-                                      margin: const EdgeInsets.only(left: 12),
-                                      width: 55,
-                                      height: 55,
-                                      decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(100),
-                                        color: const Color(0xFF1b193d),
-                                      ),
-                                      child: const Center(
-                                        child: Text(
-                                          "G",
-                                          style: TextStyle(
-                                              fontSize: 22,
-                                              fontWeight: FontWeight.w700,
-                                              color: Colors.white),
-                                        ),
+                                    Text(
+                                      title,
+                                      style: const TextStyle(
+                                        fontSize: 20,
+                                        color: Color(0xFF47417d),
                                       ),
                                     ),
                                     Container(
-                                      margin: const EdgeInsets.only(
-                                          top: 12, left: 12),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                      margin: const EdgeInsets.only(top: 10),
+                                      child: Row(
                                         children: [
                                           Text(
-                                            title,
-                                            style: const TextStyle(
-                                                fontSize: 20,
-                                                color: Color(0xFF47417d)),
+                                            "100,27",
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                color: Colors.white
+                                                    .withOpacity(0.8),
+                                                fontWeight: FontWeight.w500),
                                           ),
                                           Container(
                                             margin:
-                                                const EdgeInsets.only(top: 10),
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  "100,27",
-                                                  style: TextStyle(
-                                                      fontSize: 16,
-                                                      color: Colors.white
-                                                          .withOpacity(0.8),
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                ),
-                                                Container(
-                                                  margin: const EdgeInsets.only(
-                                                      left: 8),
-                                                  child: Text(
-                                                    "+0,53%",
-                                                    style: TextStyle(
-                                                        fontSize: 14,
-                                                        color: Colors.white
-                                                            .withOpacity(0.6),
-                                                        fontWeight:
-                                                            FontWeight.w500),
-                                                  ),
-                                                )
-                                              ],
+                                                const EdgeInsets.only(left: 8),
+                                            child: Text(
+                                              "+0,53%",
+                                              style: TextStyle(
+                                                  fontSize: 14,
+                                                  color: Colors.white
+                                                      .withOpacity(0.6),
+                                                  fontWeight: FontWeight.w500),
                                             ),
                                           )
                                         ],
                                       ),
-                                    ),
+                                    )
                                   ],
                                 ),
-                              );
+                              ),
+                            ],
+                          ),
+                        );
                       },
                     ),
-                  )
-                : SlideTransition(
-                    position: firstRightToLeftAnim,
-                    child: Container(
-                      margin: const EdgeInsets.only(top: 20),
-                      width: 215,
-                      height: 80,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(100),
-                        gradient: const LinearGradient(
-                          begin: Alignment.topRight,
-                          end: Alignment.topLeft,
-                          colors: [
-                            Color(0xFF3fdcd6),
-                            Color(0xFF48eace),
-                            Color(0xFF90e6cf)
-                          ],
-                        ),
-                      ),
-                    ),
                   ),
-            showListView
-                ? Container(
-                    height: 80,
-                    margin: const EdgeInsets.only(top: 15),
-                    child: ListView.builder(
-                      controller: _secondScrollController,
-                      shrinkWrap: true,
-                      physics: const BouncingScrollPhysics(),
-                      scrollDirection: Axis.horizontal,
-                      itemCount: thirdBrandList.length,
-                      itemBuilder: (context, index) {
-                        String title = thirdBrandList[index];
+                ),
+                showListView
+                    ? Container(
+                        height: 80,
+                        margin: const EdgeInsets.only(top: 20),
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          controller: _firstScrollController,
+                          physics: const BouncingScrollPhysics(),
+                          scrollDirection: Axis.horizontal,
+                          itemCount: secondBrndList.length,
+                          itemBuilder: (context, index) {
+                            String title = secondBrndList[index];
 
-                        return title == ""
-                            ? Container(
-                                height: 80,
-                                width: 210,
-                                margin: const EdgeInsets.only(right: 5),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(100),
-                                  gradient: const LinearGradient(
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                    colors: [
-                                      Color(0xFF5810df),
-                                      Color(0xFF4f0cdc),
-                                      Color(0xFF3d06db),
-                                      Color(0xFF0e07ca)
-                                    ],
-                                  ),
-                                ),
-                                child: Row(children: []),
-                              )
-                            : GestureDetector(
-                                onLongPress: () {
-                                  print("longPress");
-                                },
-                                child: Container(
-                                  height: 80,
-                                  margin:
-                                      const EdgeInsets.only(right: 18, left: 2),
-                                  width: 215,
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFF0a0720),
-                                    borderRadius: BorderRadius.circular(100),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        margin: const EdgeInsets.only(left: 12),
-                                        width: 55,
-                                        height: 55,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(100),
-                                          color: const Color(0xFF1b193d),
-                                        ),
-                                        child: const Center(
-                                          child: Text(
-                                            "G",
-                                            style: TextStyle(
-                                                fontSize: 22,
-                                                fontWeight: FontWeight.w700,
-                                                color: Colors.white),
+                            return index == 0
+                                ? Container(
+                                    height: 80,
+                                    margin: const EdgeInsets.only(left: 5),
+                                    width: 215,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(100),
+                                      gradient: const LinearGradient(
+                                        begin: Alignment.topRight,
+                                        end: Alignment.topLeft,
+                                        colors: [
+                                          Color(0xFF3fdcd6),
+                                          Color(0xFF48eace),
+                                          Color(0xFF90e6cf)
+                                        ],
+                                      ),
+                                    ),
+                                    child: Row(
+                                      children: [],
+                                    ),
+                                  )
+                                : Container(
+                                    height: 80,
+                                    margin: EdgeInsets.only(
+                                        right: 18, left: index == 0 ? 40 : 0),
+                                    width: 215,
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFF0a0720),
+                                      borderRadius: BorderRadius.circular(100),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          margin:
+                                              const EdgeInsets.only(left: 12),
+                                          width: 55,
+                                          height: 55,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(100),
+                                            color: const Color(0xFF1b193d),
+                                          ),
+                                          child: const Center(
+                                            child: Text(
+                                              "G",
+                                              style: TextStyle(
+                                                  fontSize: 22,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: Colors.white),
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      Container(
-                                        margin: const EdgeInsets.only(
-                                            top: 12, left: 12),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              title,
-                                              style: TextStyle(
-                                                  fontSize: 20,
-                                                  color: Color(0xFF47417d)),
-                                            ),
-                                            Container(
-                                              margin: const EdgeInsets.only(
-                                                  top: 10),
-                                              child: Row(
-                                                children: [
-                                                  Text(
-                                                    "100,27",
-                                                    style: TextStyle(
-                                                        fontSize: 16,
-                                                        color: Colors.white
-                                                            .withOpacity(0.8),
-                                                        fontWeight:
-                                                            FontWeight.w500),
-                                                  ),
-                                                  Container(
-                                                    margin:
-                                                        const EdgeInsets.only(
-                                                            left: 8),
-                                                    child: Text(
-                                                      "+0,53%",
+                                        Container(
+                                          margin: const EdgeInsets.only(
+                                              top: 12, left: 12),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                title,
+                                                style: const TextStyle(
+                                                    fontSize: 20,
+                                                    color: Color(0xFF47417d)),
+                                              ),
+                                              Container(
+                                                margin: const EdgeInsets.only(
+                                                    top: 10),
+                                                child: Row(
+                                                  children: [
+                                                    Text(
+                                                      "100,27",
                                                       style: TextStyle(
-                                                          fontSize: 14,
+                                                          fontSize: 16,
                                                           color: Colors.white
-                                                              .withOpacity(0.6),
+                                                              .withOpacity(0.8),
                                                           fontWeight:
                                                               FontWeight.w500),
                                                     ),
-                                                  )
-                                                ],
-                                              ),
-                                            )
-                                          ],
+                                                    Container(
+                                                      margin:
+                                                          const EdgeInsets.only(
+                                                              left: 8),
+                                                      child: Text(
+                                                        "+0,53%",
+                                                        style: TextStyle(
+                                                            fontSize: 14,
+                                                            color: Colors.white
+                                                                .withOpacity(
+                                                                    0.6),
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w500),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              )
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                      },
-                    ),
-                  )
-                : SlideTransition(
-                    position: secondRightToLeftAnim,
-                    child: Container(
-                      margin: const EdgeInsets.only(top: 15),
-                      width: 215,
-                      height: 80,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(100),
-                        gradient: const LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            Color(0xFF5810df),
-                            Color(0xFF4f0cdc),
-                            Color(0xFF3d06db),
-                            Color(0xFF0e07ca)
-                          ],
+                                      ],
+                                    ),
+                                  );
+                          },
+                        ),
+                      )
+                    : SlideTransition(
+                        position: firstRightToLeftAnim,
+                        child: Container(
+                          margin: const EdgeInsets.only(top: 20),
+                          width: 215,
+                          height: 80,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(100),
+                            gradient: const LinearGradient(
+                              begin: Alignment.topRight,
+                              end: Alignment.topLeft,
+                              colors: [
+                                Color(0xFF3fdcd6),
+                                Color(0xFF48eace),
+                                Color(0xFF90e6cf)
+                              ],
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  )
+                showListView
+                    ? Container(
+                        height: 80,
+                        margin: const EdgeInsets.only(top: 15),
+                        child: ListView.builder(
+                          controller: _secondScrollController,
+                          shrinkWrap: true,
+                          physics: const BouncingScrollPhysics(),
+                          scrollDirection: Axis.horizontal,
+                          itemCount: thirdBrandList.length,
+                          itemBuilder: (context, index) {
+                            String title = thirdBrandList[index];
+
+                            return title == ""
+                                ? Container(
+                                    height: 80,
+                                    width: 210,
+                                    margin: const EdgeInsets.only(right: 5),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(100),
+                                      gradient: const LinearGradient(
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                        colors: [
+                                          Color(0xFF5810df),
+                                          Color(0xFF4f0cdc),
+                                          Color(0xFF3d06db),
+                                          Color(0xFF0e07ca)
+                                        ],
+                                      ),
+                                    ),
+                                    child: Row(children: []),
+                                  )
+                                : GestureDetector(
+                                    onLongPress: () {
+                                      setState(() {
+                                        showDialogScreen = true;
+                                        if (dialogWidth != 0) {
+                                          dialogWidth = 0;
+                                          dialogHeight = 0;
+                                        } else {
+                                          dialogWidth = 350;
+                                          dialogHeight = 600;
+                                        }
+                                      });
+                                      print("longPress");
+                                    },
+                                    child: Container(
+                                      height: 80,
+                                      margin: const EdgeInsets.only(
+                                          right: 18, left: 2),
+                                      width: 215,
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFF0a0720),
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            margin:
+                                                const EdgeInsets.only(left: 12),
+                                            width: 55,
+                                            height: 55,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(100),
+                                              color: const Color(0xFF1b193d),
+                                            ),
+                                            child: const Center(
+                                              child: Text(
+                                                "G",
+                                                style: TextStyle(
+                                                    fontSize: 22,
+                                                    fontWeight: FontWeight.w700,
+                                                    color: Colors.white),
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
+                                            margin: const EdgeInsets.only(
+                                                top: 12, left: 12),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  title,
+                                                  style: TextStyle(
+                                                      fontSize: 20,
+                                                      color: Color(0xFF47417d)),
+                                                ),
+                                                Container(
+                                                  margin: const EdgeInsets.only(
+                                                      top: 10),
+                                                  child: Row(
+                                                    children: [
+                                                      Text(
+                                                        "100,27",
+                                                        style: TextStyle(
+                                                            fontSize: 16,
+                                                            color: Colors.white
+                                                                .withOpacity(
+                                                                    0.8),
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w500),
+                                                      ),
+                                                      Container(
+                                                        margin: const EdgeInsets
+                                                            .only(left: 8),
+                                                        child: Text(
+                                                          "+0,53%",
+                                                          style: TextStyle(
+                                                              fontSize: 14,
+                                                              color: Colors
+                                                                  .white
+                                                                  .withOpacity(
+                                                                      0.6),
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500),
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                          },
+                        ),
+                      )
+                    : SlideTransition(
+                        position: secondRightToLeftAnim,
+                        child: Container(
+                          margin: const EdgeInsets.only(top: 15),
+                          width: 215,
+                          height: 80,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(100),
+                            gradient: const LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                Color(0xFF5810df),
+                                Color(0xFF4f0cdc),
+                                Color(0xFF3d06db),
+                                Color(0xFF0e07ca)
+                              ],
+                            ),
+                          ),
+                        ),
+                      )
+              ],
+            ),
+            Dismissible(
+              direction: DismissDirection.vertical,
+              onDismissed: (direction) {},
+              key: UniqueKey(),
+              child: AnimatedContainer(
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(35),
+                    gradient: const LinearGradient(
+                        begin: Alignment.bottomRight,
+                        colors: [
+                          Color(0xFF040240),
+                          Color(0xFF030131),
+                        ])),
+                duration: const Duration(milliseconds: 1500),
+                width: dialogWidth,
+                height: dialogHeight,
+                alignment: Alignment.center,
+                child: Container(
+                  child: Column(
+                    children: [
+                      Container(
+                        child: Row(
+                          children: [
+                            Container(
+                              child: Icon(
+                                Icons.paypal,
+                                color: Colors.transparent,
+                              ),
+                            ),
+                            Container(
+                              child: Text(
+                                "PayPal",
+                                style: TextStyle(
+                                    fontSize: 25, fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            )
           ],
         ),
       ),
