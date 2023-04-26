@@ -68,7 +68,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    _firstScrollController = ScrollController(initialScrollOffset: 155.0);
+    _firstScrollController = ScrollController(initialScrollOffset: 140.0);
     _secondScrollController = ScrollController(initialScrollOffset: 372.0);
 
     firstRightToLeftAnimController = AnimationController(
@@ -78,11 +78,11 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
     boxesController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1500),
+      duration: const Duration(milliseconds: 1300),
     );
     rightToLeftListviewController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1500),
+      duration: const Duration(milliseconds: 1000),
     );
     firstRightToLeftAnim = Tween(
       begin: const Offset(2, 0),
@@ -111,24 +111,25 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       end: const Offset(0, 0),
     ).animate(rightToLeftListviewController);
 
-    // rightBoxAnim.addStatusListener((status) {
-    //   if (status == AnimationStatus.completed) {
-    //     rightToLeftListviewController.forward();
-    //   }
-    // });
-    // rightToLeftListviewAnim.addStatusListener((status) {
-    //   if (status == AnimationStatus.completed) {
-    //   }
-    // });
-
-    Future.delayed(Duration(microseconds: 0)).then((value) async {
+    Future.delayed(const Duration(microseconds: 0)).then((value) async {
       setState(() {
         _height = 300;
       });
-      await Future.delayed(Duration(milliseconds: 1500));
+      await Future.delayed(
+        const Duration(milliseconds: 700),
+      );
       boxesController.forward();
-      rightToLeftListviewController.forward();
-      firstRightToLeftAnimController.forward();
+    });
+
+    boxesController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        rightToLeftListviewController.forward();
+      }
+    });
+    rightToLeftListviewController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        firstRightToLeftAnimController.forward();
+      }
     });
 
     firstRightToLeftAnimController.addStatusListener((status) {
@@ -138,6 +139,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         });
       }
     });
+
     super.initState();
   }
 
@@ -220,36 +222,37 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                     ],
                   ),
                   Container(
-                      margin: const EdgeInsets.only(left: 20, bottom: 30),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "25 800",
-                            style: TextStyle(
-                                fontSize: 50,
-                                color: Colors.white.withOpacity(0.8),
-                                fontWeight: FontWeight.w400),
+                    margin: const EdgeInsets.only(left: 20, bottom: 30),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "25 800",
+                          style: TextStyle(
+                              fontSize: 50,
+                              color: Colors.white.withOpacity(0.8),
+                              fontWeight: FontWeight.w400),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(top: 15),
+                          width: 80,
+                          height: 35,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(100),
+                            color: Colors.white.withOpacity(0.4),
                           ),
-                          Container(
-                            margin: const EdgeInsets.only(top: 15),
-                            width: 80,
-                            height: 35,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(100),
-                              color: Colors.white.withOpacity(0.4),
+                          child: Center(
+                            child: Text(
+                              "+620",
+                              style: TextStyle(
+                                  color: Colors.white.withOpacity(0.9),
+                                  fontSize: 18),
                             ),
-                            child: Center(
-                              child: Text(
-                                "+620",
-                                style: TextStyle(
-                                    color: Colors.white.withOpacity(0.9),
-                                    fontSize: 18),
-                              ),
-                            ),
-                          )
-                        ],
-                      )),
+                          ),
+                        )
+                      ],
+                    ),
+                  )
                 ],
               ),
             ),
@@ -451,8 +454,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                         return index == 0
                             ? Container(
                                 height: 80,
-                                margin: EdgeInsets.only(
-                                    right: 0, left: index == 0 ? 40 : 0),
+                                margin: const EdgeInsets.only(left: 5),
                                 width: 215,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(100),
@@ -473,7 +475,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                             : Container(
                                 height: 80,
                                 margin: EdgeInsets.only(
-                                    right: 0, left: index == 0 ? 40 : 0),
+                                    right: 18, left: index == 0 ? 40 : 0),
                                 width: 215,
                                 decoration: BoxDecoration(
                                   color: const Color(0xFF0a0720),
@@ -509,7 +511,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                         children: [
                                           Text(
                                             title,
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                                 fontSize: 20,
                                                 color: Color(0xFF47417d)),
                                           ),
@@ -588,9 +590,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                         return title == ""
                             ? Container(
                                 height: 80,
-                                margin: EdgeInsets.only(
-                                    right: 0, left: index == 0 ? 40 : 0),
                                 width: 210,
+                                margin: const EdgeInsets.only(right: 5),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(100),
                                   gradient: const LinearGradient(
@@ -606,83 +607,89 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                 ),
                                 child: Row(children: []),
                               )
-                            : Container(
-                                height: 80,
-                                margin: EdgeInsets.only(
-                                    right: 0, left: index == 0 ? 40 : 0),
-                                width: 215,
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFF0a0720),
-                                  borderRadius: BorderRadius.circular(100),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      margin: const EdgeInsets.only(left: 12),
-                                      width: 55,
-                                      height: 55,
-                                      decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(100),
-                                        color: const Color(0xFF1b193d),
-                                      ),
-                                      child: const Center(
-                                        child: Text(
-                                          "G",
-                                          style: TextStyle(
-                                              fontSize: 22,
-                                              fontWeight: FontWeight.w700,
-                                              color: Colors.white),
+                            : GestureDetector(
+                                onLongPress: () {
+                                  print("longPress");
+                                },
+                                child: Container(
+                                  height: 80,
+                                  margin:
+                                      const EdgeInsets.only(right: 18, left: 2),
+                                  width: 215,
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFF0a0720),
+                                    borderRadius: BorderRadius.circular(100),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        margin: const EdgeInsets.only(left: 12),
+                                        width: 55,
+                                        height: 55,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                          color: const Color(0xFF1b193d),
+                                        ),
+                                        child: const Center(
+                                          child: Text(
+                                            "G",
+                                            style: TextStyle(
+                                                fontSize: 22,
+                                                fontWeight: FontWeight.w700,
+                                                color: Colors.white),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    Container(
-                                      margin: const EdgeInsets.only(
-                                          top: 12, left: 12),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            title,
-                                            style: TextStyle(
-                                                fontSize: 20,
-                                                color: Color(0xFF47417d)),
-                                          ),
-                                          Container(
-                                            margin:
-                                                const EdgeInsets.only(top: 10),
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  "100,27",
-                                                  style: TextStyle(
-                                                      fontSize: 16,
-                                                      color: Colors.white
-                                                          .withOpacity(0.8),
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                ),
-                                                Container(
-                                                  margin: const EdgeInsets.only(
-                                                      left: 8),
-                                                  child: Text(
-                                                    "+0,53%",
+                                      Container(
+                                        margin: const EdgeInsets.only(
+                                            top: 12, left: 12),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              title,
+                                              style: TextStyle(
+                                                  fontSize: 20,
+                                                  color: Color(0xFF47417d)),
+                                            ),
+                                            Container(
+                                              margin: const EdgeInsets.only(
+                                                  top: 10),
+                                              child: Row(
+                                                children: [
+                                                  Text(
+                                                    "100,27",
                                                     style: TextStyle(
-                                                        fontSize: 14,
+                                                        fontSize: 16,
                                                         color: Colors.white
-                                                            .withOpacity(0.6),
+                                                            .withOpacity(0.8),
                                                         fontWeight:
                                                             FontWeight.w500),
                                                   ),
-                                                )
-                                              ],
-                                            ),
-                                          )
-                                        ],
+                                                  Container(
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                            left: 8),
+                                                    child: Text(
+                                                      "+0,53%",
+                                                      style: TextStyle(
+                                                          fontSize: 14,
+                                                          color: Colors.white
+                                                              .withOpacity(0.6),
+                                                          fontWeight:
+                                                              FontWeight.w500),
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            )
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               );
                       },
