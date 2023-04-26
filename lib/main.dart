@@ -1,6 +1,5 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,6 +19,14 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+// class Company {
+//   final String name;
+//   final double benefitPercent;
+//   final int price;
+
+//   const Company({})
+// }
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -58,7 +65,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   bool showDialogScreen = false;
 
   bool showListView = false;
-
+  int selectedItem = 0;
   double dialogWidth = 0;
   double dialogHeight = 0;
 
@@ -626,7 +633,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                           dialogHeight = 0;
                                         } else {
                                           dialogWidth = 350;
-                                          dialogHeight = 600;
+                                          dialogHeight = 480;
                                         }
                                       });
                                       print("longPress");
@@ -672,7 +679,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                               children: [
                                                 Text(
                                                   title,
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                       fontSize: 20,
                                                       color: Color(0xFF47417d)),
                                                 ),
@@ -764,24 +771,149 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                 alignment: Alignment.center,
                 child: Container(
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Container(
+                        margin: const EdgeInsets.only(top: 20),
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Container(
-                              child: Icon(
+                              margin: const EdgeInsets.only(right: 7),
+                              child: const Icon(
                                 Icons.paypal,
-                                color: Colors.transparent,
+                                color: Colors.white,
                               ),
                             ),
                             Container(
-                              child: Text(
+                              child: const Text(
                                 "PayPal",
                                 style: TextStyle(
-                                    fontSize: 25, fontWeight: FontWeight.w500),
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white),
                               ),
                             ),
                           ],
+                        ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(top: 30),
+                        child: const Text(
+                          "155,48",
+                          style: TextStyle(fontSize: 28, color: Colors.white),
+                        ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(top: 8),
+                        child: const Text(
+                          "+0,47",
+                          style:
+                              TextStyle(fontSize: 20, color: Color(0xFF55746b)),
+                        ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(top: 35),
+                        child: SfSparkLineChart(
+                          axisLineColor: Colors.transparent,
+                          data: const <double>[
+                            1,
+                            5,
+                            -6,
+                            0,
+                            1,
+                            -2,
+                            7,
+                            -7,
+                            -4,
+                            -10,
+                          ],
+                          trackball: const SparkChartTrackball(
+                              color: Colors.white,
+                              activationMode: SparkChartActivationMode.tap),
+
+                          // labelDisplayMode: SparkChartLabelDisplayMode.all,
+                          // labelStyle: TextStyle(color: Colors.white),
+                          // marker: SparkChartMarker(
+                          //     displayMode: SparkChartMarkerDisplayMode.all),
+                        ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(left: 16),
+                        child: Row(
+                          // mainAxisSize: MainAxisSize.min,
+                          children: const [
+                            Text(
+                              "12:30",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 15),
+                            ),
+                            SizedBox(
+                              width: 55,
+                            ),
+                            Text(
+                              "13:30",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 15),
+                            ),
+                            SizedBox(
+                              width: 55,
+                            ),
+                            Text(
+                              "14:30",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 15),
+                            ),
+                            SizedBox(
+                              width: 55,
+                            ),
+                            Text(
+                              "15:30",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 15),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(top: 30),
+                        height: 30,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: 5,
+                          itemBuilder: (context, index) {
+                            return AnimatedContainer(
+                              duration: const Duration(seconds: 1),
+                              decoration: BoxDecoration(
+                                color: selectedItem == index
+                                    ? Colors.white
+                                    : const Color(0xFF080720),
+                                borderRadius: BorderRadius.circular(100),
+                              ),
+                              margin: const EdgeInsets.only(right: 5, left: 20),
+                              child: InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    selectedItem = index;
+                                  });
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
+                                  child: Center(
+                                    child: Text(
+                                      "1M",
+                                      style: TextStyle(
+                                        color: selectedItem == index
+                                            ? Colors.black
+                                            : const Color(0xFF504d72),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
                         ),
                       )
                     ],
