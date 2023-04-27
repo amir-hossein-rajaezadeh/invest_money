@@ -20,13 +20,60 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// class Company {
-//   final String name;
-//   final double benefitPercent;
-//   final int price;
+@immutable
+class Company {
+  final String name;
+  final double price;
+  final double changePercent;
+  final bool hasBenefit;
+  final String companyLogo;
 
-//   const Company({})
-// }
+  const Company(
+      {required this.name,
+      required this.changePercent,
+      required this.price,
+      required this.hasBenefit,
+      required this.companyLogo});
+}
+
+const companyList = [
+  Company(
+      name: "", price: 0, changePercent: 0, hasBenefit: true, companyLogo: ""),
+  Company(
+      name: "Google",
+      price: 100.27,
+      changePercent: 0.55,
+      hasBenefit: true,
+      companyLogo: "assets/images/google.png"),
+  Company(
+      name: "Shopify",
+      price: 44.67,
+      changePercent: 0.47,
+      hasBenefit: false,
+      companyLogo: "assets/images/shopify.png"),
+  Company(
+      name: "Dropbox",
+      price: 19.9,
+      changePercent: 1.07,
+      hasBenefit: true,
+      companyLogo: "assets/images/dropbox.png"),
+  Company(
+      name: "Apple",
+      price: 155.48,
+      changePercent: 0.47,
+      hasBenefit: true,
+      companyLogo: "assets/images/apple.png"),
+  Company(
+      name: "PayPal",
+      price: 72.05,
+      changePercent: 1.14,
+      hasBenefit: false,
+      companyLogo: "assets/images/paypal.png"),
+  Company(
+      name: "", price: 0, changePercent: 0, hasBenefit: false, companyLogo: ""),
+];
+var benefitedCompanyList = companyList.where((e) => e.hasBenefit);
+var nonBenefitedCompanyList = companyList.where((e) => !e.hasBenefit);
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -50,18 +97,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   late AnimationController rightToLeftListviewController;
   late AnimationController boxesController;
 
-  List<String> firstBrndList = [
-    "Google",
-    "Shopify",
-  ];
-  List<String> secondBrndList = [
-    "",
-    "Apple",
-    "DropBox",
-    "Yandex",
-  ];
-
-  List<String> thirdBrandList = ["Amazon", "Facebok", "Twitter", ""];
   bool showDialogScreen = false;
 
   bool showListView = false;
@@ -79,7 +114,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   @override
   void initState() {
     _firstScrollController = ScrollController(initialScrollOffset: 140.0);
-    _secondScrollController = ScrollController(initialScrollOffset: 372.0);
+    _secondScrollController = ScrollController(initialScrollOffset: 140.0);
 
     firstRightToLeftAnimController = AnimationController(
       vsync: this,
@@ -158,7 +193,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     double? height = MediaQuery.of(context).size.height;
     double? width = MediaQuery.of(context).size.width;
-
+    print("dattaaaa ${benefitedCompanyList.length}");
     return SafeArea(
       child: Scaffold(
         backgroundColor: const Color(0xFF070713),
@@ -370,83 +405,97 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                     child: ListView.builder(
                       physics: const BouncingScrollPhysics(),
                       scrollDirection: Axis.horizontal,
-                      itemCount: firstBrndList.length,
+                      itemCount: companyList.length,
                       itemBuilder: (context, index) {
-                        String title = firstBrndList[index];
-                        return Container(
-                          margin: EdgeInsets.only(
-                              right: 15, left: index == 0 ? 55 : 0),
-                          width: 215,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF0a0720),
-                            borderRadius: BorderRadius.circular(100),
-                          ),
-                          child: Row(
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.only(left: 12),
-                                width: 55,
-                                height: 55,
+                        Company company = companyList[index];
+                        return company.name != ""
+                            ? Container(
+                                margin: EdgeInsets.only(
+                                    right: 15, left: index == 0 ? 30 : 0),
+                                width: 215,
                                 decoration: BoxDecoration(
+                                  color: const Color(0xFF0a0720),
                                   borderRadius: BorderRadius.circular(100),
-                                  color: const Color(0xFF1b193d),
                                 ),
-                                child: const Center(
-                                  child: Text(
-                                    "G",
-                                    style: TextStyle(
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.w700,
-                                        color: Colors.white),
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                margin:
-                                    const EdgeInsets.only(top: 12, left: 12),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                child: Row(
                                   children: [
-                                    Text(
-                                      title,
-                                      style: const TextStyle(
-                                        fontSize: 20,
-                                        color: Color(0xFF47417d),
+                                    Container(
+                                      margin: const EdgeInsets.only(left: 12),
+                                      width: 55,
+                                      height: 55,
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                        color: const Color(0xFF1b193d),
+                                      ),
+                                      child: Center(
+                                        child: Image.asset(
+                                          company.companyLogo,
+                                          width: 27,
+                                          fit: BoxFit.fill,
+                                          color: Colors.white,
+                                        ),
                                       ),
                                     ),
                                     Container(
-                                      margin: const EdgeInsets.only(top: 10),
-                                      child: Row(
+                                      margin: const EdgeInsets.only(
+                                          top: 12, left: 12),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            "100,27",
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                color: Colors.white
-                                                    .withOpacity(0.8),
-                                                fontWeight: FontWeight.w500),
+                                            company.name,
+                                            style: const TextStyle(
+                                              fontSize: 20,
+                                              color: Color(0xFF47417d),
+                                            ),
                                           ),
                                           Container(
                                             margin:
-                                                const EdgeInsets.only(left: 8),
-                                            child: Text(
-                                              "+0,53%",
-                                              style: TextStyle(
-                                                  fontSize: 14,
-                                                  color: Colors.white
-                                                      .withOpacity(0.6),
-                                                  fontWeight: FontWeight.w500),
+                                                const EdgeInsets.only(top: 10),
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  company.price.toString(),
+                                                  style: TextStyle(
+                                                      fontSize: 16,
+                                                      color: Colors.white
+                                                          .withOpacity(0.8),
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                ),
+                                                Container(
+                                                  margin: const EdgeInsets.only(
+                                                      left: 8),
+                                                  child: Text(
+                                                    company.hasBenefit
+                                                        ? "+${company.changePercent}%"
+                                                        : "-${company.changePercent}%",
+                                                    style: TextStyle(
+                                                        fontSize: 14,
+                                                        color: company
+                                                                .hasBenefit
+                                                            ? Colors.green
+                                                                .withOpacity(
+                                                                    0.7)
+                                                            : Colors.red
+                                                                .withOpacity(
+                                                                    0.7),
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  ),
+                                                )
+                                              ],
                                             ),
                                           )
                                         ],
                                       ),
-                                    )
+                                    ),
                                   ],
                                 ),
-                              ),
-                            ],
-                          ),
-                        );
+                              )
+                            : Container();
                       },
                     ),
                   ),
@@ -460,11 +509,12 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                           controller: _firstScrollController,
                           physics: const BouncingScrollPhysics(),
                           scrollDirection: Axis.horizontal,
-                          itemCount: secondBrndList.length,
+                          itemCount: benefitedCompanyList.length,
                           itemBuilder: (context, index) {
-                            String title = secondBrndList[index];
+                            Company benefitedCompany =
+                                benefitedCompanyList.toList()[index];
 
-                            return index == 0
+                            return benefitedCompany.name == ""
                                 ? Container(
                                     height: 80,
                                     margin: const EdgeInsets.only(left: 5),
@@ -506,13 +556,12 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                                 BorderRadius.circular(100),
                                             color: const Color(0xFF1b193d),
                                           ),
-                                          child: const Center(
-                                            child: Text(
-                                              "G",
-                                              style: TextStyle(
-                                                  fontSize: 22,
-                                                  fontWeight: FontWeight.w700,
-                                                  color: Colors.white),
+                                          child: Center(
+                                            child: Image.asset(
+                                              benefitedCompany.companyLogo,
+                                              width: 27,
+                                              fit: BoxFit.fill,
+                                              color: Colors.white,
                                             ),
                                           ),
                                         ),
@@ -524,7 +573,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                title,
+                                                benefitedCompany.name,
                                                 style: const TextStyle(
                                                     fontSize: 20,
                                                     color: Color(0xFF47417d)),
@@ -535,7 +584,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                                 child: Row(
                                                   children: [
                                                     Text(
-                                                      "100,27",
+                                                      benefitedCompany.price
+                                                          .toString(),
                                                       style: TextStyle(
                                                           fontSize: 16,
                                                           color: Colors.white
@@ -548,12 +598,20 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                                           const EdgeInsets.only(
                                                               left: 8),
                                                       child: Text(
-                                                        "+0,53%",
+                                                        benefitedCompany
+                                                                .hasBenefit
+                                                            ? "+${benefitedCompany.changePercent}%"
+                                                            : "-${benefitedCompany.changePercent}%",
                                                         style: TextStyle(
                                                             fontSize: 14,
-                                                            color: Colors.white
-                                                                .withOpacity(
-                                                                    0.6),
+                                                            color: benefitedCompany
+                                                                    .hasBenefit
+                                                                ? Colors.green
+                                                                    .withOpacity(
+                                                                        0.7)
+                                                                : Colors.red
+                                                                    .withOpacity(
+                                                                        0.7),
                                                             fontWeight:
                                                                 FontWeight
                                                                     .w500),
@@ -600,11 +658,12 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                           shrinkWrap: true,
                           physics: const BouncingScrollPhysics(),
                           scrollDirection: Axis.horizontal,
-                          itemCount: thirdBrandList.length,
+                          itemCount: nonBenefitedCompanyList.length,
                           itemBuilder: (context, index) {
-                            String title = thirdBrandList[index];
+                            Company nonBenefitedCompany =
+                                nonBenefitedCompanyList.toList()[index];
 
-                            return title == ""
+                            return nonBenefitedCompany.name == ""
                                 ? Container(
                                     height: 80,
                                     width: 210,
@@ -660,13 +719,12 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                                   BorderRadius.circular(100),
                                               color: const Color(0xFF1b193d),
                                             ),
-                                            child: const Center(
-                                              child: Text(
-                                                "G",
-                                                style: TextStyle(
-                                                    fontSize: 22,
-                                                    fontWeight: FontWeight.w700,
-                                                    color: Colors.white),
+                                            child: Center(
+                                              child: Image.asset(
+                                                nonBenefitedCompany.companyLogo,
+                                                width: 27,
+                                                fit: BoxFit.fill,
+                                                color: Colors.white,
                                               ),
                                             ),
                                           ),
@@ -678,7 +736,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                  title,
+                                                  nonBenefitedCompany.name,
                                                   style: const TextStyle(
                                                       fontSize: 20,
                                                       color: Color(0xFF47417d)),
@@ -689,7 +747,9 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                                   child: Row(
                                                     children: [
                                                       Text(
-                                                        "100,27",
+                                                        nonBenefitedCompany
+                                                            .price
+                                                            .toString(),
                                                         style: TextStyle(
                                                             fontSize: 16,
                                                             color: Colors.white
@@ -703,13 +763,20 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                                         margin: const EdgeInsets
                                                             .only(left: 8),
                                                         child: Text(
-                                                          "+0,53%",
+                                                          nonBenefitedCompany
+                                                                  .hasBenefit
+                                                              ? "+${nonBenefitedCompany.changePercent}%"
+                                                              : "-${nonBenefitedCompany.changePercent}%",
                                                           style: TextStyle(
                                                               fontSize: 14,
-                                                              color: Colors
-                                                                  .white
-                                                                  .withOpacity(
-                                                                      0.6),
+                                                              color: nonBenefitedCompany
+                                                                      .hasBenefit
+                                                                  ? Colors.green
+                                                                      .withOpacity(
+                                                                          0.7)
+                                                                  : Colors.red
+                                                                      .withOpacity(
+                                                                          0.7),
                                                               fontWeight:
                                                                   FontWeight
                                                                       .w500),
