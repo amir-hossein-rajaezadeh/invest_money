@@ -74,8 +74,8 @@ const companyList = [
   Company(
       name: "", price: 0, changePercent: 0, hasBenefit: false, companyLogo: ""),
 ];
-var benefitedCompanyList = companyList.where((e) => e.hasBenefit);
-var nonBenefitedCompanyList = companyList.where((e) => !e.hasBenefit);
+// var benefitedCompanyList = companyList.where((e) => e.hasBenefit);
+// var nonBenefitedCompanyList = companyList.where((e) => !e.hasBenefit);
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -98,9 +98,9 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   late Animation<Offset> rightToLeftListviewAnim;
   late AnimationController rightToLeftListviewController;
   late AnimationController boxesController;
-
+  int dialogMode = 0;
   bool showDialogScreen = false;
-
+  var selectedCompanyIndex = 0;
   bool showListView = false;
   int selectedItem = 0;
   double dialogWidth = 0;
@@ -195,7 +195,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     double? height = MediaQuery.of(context).size.height;
     double? width = MediaQuery.of(context).size.width;
-    print("dattaaaa ${benefitedCompanyList.length}");
     return SafeArea(
       child: Scaffold(
         backgroundColor: const Color(0xFF070713),
@@ -419,82 +418,99 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                   color: const Color(0xFF0a0720),
                                   borderRadius: BorderRadius.circular(100),
                                 ),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      margin: const EdgeInsets.only(left: 12),
-                                      width: 55,
-                                      height: 55,
-                                      decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(100),
-                                        color: const Color(0xFF1b193d),
-                                      ),
-                                      child: Center(
-                                        child: Image.asset(
-                                          company.companyLogo,
-                                          width: 27,
-                                          fit: BoxFit.fill,
-                                          color: Colors.white,
+                                child: GestureDetector(
+                                  onLongPress: () {
+                                    setState(() {
+                                      dialogMode = 0;
+                                      selectedCompanyIndex = index;
+                                      showDialogScreen = true;
+                                      if (dialogWidth != 0) {
+                                        dialogWidth = 0;
+                                        dialogHeight = 0;
+                                      } else {
+                                        dialogWidth = 350;
+                                        dialogHeight = 480;
+                                      }
+                                    });
+                                  },
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        margin: const EdgeInsets.only(left: 12),
+                                        width: 55,
+                                        height: 55,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                          color: const Color(0xFF1b193d),
+                                        ),
+                                        child: Center(
+                                          child: Image.asset(
+                                            company.companyLogo,
+                                            width: 27,
+                                            fit: BoxFit.fill,
+                                            color: Colors.white,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    Container(
-                                      margin: const EdgeInsets.only(
-                                          top: 12, left: 12),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            company.name,
-                                            style: const TextStyle(
-                                              fontSize: 20,
-                                              color: Color(0xFF47417d),
+                                      Container(
+                                        margin: const EdgeInsets.only(
+                                            top: 12, left: 12),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              company.name,
+                                              style: const TextStyle(
+                                                fontSize: 20,
+                                                color: Color(0xFF47417d),
+                                              ),
                                             ),
-                                          ),
-                                          Container(
-                                            margin:
-                                                const EdgeInsets.only(top: 10),
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  company.price.toString(),
-                                                  style: TextStyle(
-                                                      fontSize: 16,
-                                                      color: Colors.white
-                                                          .withOpacity(0.8),
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                ),
-                                                Container(
-                                                  margin: const EdgeInsets.only(
-                                                      left: 8),
-                                                  child: Text(
-                                                    company.hasBenefit
-                                                        ? "+${company.changePercent}%"
-                                                        : "-${company.changePercent}%",
+                                            Container(
+                                              margin: const EdgeInsets.only(
+                                                  top: 10),
+                                              child: Row(
+                                                children: [
+                                                  Text(
+                                                    company.price.toString(),
                                                     style: TextStyle(
-                                                        fontSize: 14,
-                                                        color: company
-                                                                .hasBenefit
-                                                            ? Colors.green
-                                                                .withOpacity(
-                                                                    0.7)
-                                                            : Colors.red
-                                                                .withOpacity(
-                                                                    0.7),
+                                                        fontSize: 16,
+                                                        color: Colors.white
+                                                            .withOpacity(0.8),
                                                         fontWeight:
                                                             FontWeight.w500),
                                                   ),
-                                                )
-                                              ],
-                                            ),
-                                          )
-                                        ],
+                                                  Container(
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                            left: 8),
+                                                    child: Text(
+                                                      company.hasBenefit
+                                                          ? "+${company.changePercent}%"
+                                                          : "-${company.changePercent}%",
+                                                      style: TextStyle(
+                                                          fontSize: 14,
+                                                          color: company
+                                                                  .hasBenefit
+                                                              ? Colors.green
+                                                                  .withOpacity(
+                                                                      0.7)
+                                                              : Colors.red
+                                                                  .withOpacity(
+                                                                      0.7),
+                                                          fontWeight:
+                                                              FontWeight.w500),
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            )
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               )
                             : Container();
@@ -511,10 +527,14 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                           controller: _firstScrollController,
                           physics: const BouncingScrollPhysics(),
                           scrollDirection: Axis.horizontal,
-                          itemCount: benefitedCompanyList.length,
+                          itemCount: companyList
+                              .where((e) => !e.hasBenefit)
+                              .toList()
+                              .length,
                           itemBuilder: (context, index) {
-                            Company benefitedCompany =
-                                benefitedCompanyList.toList()[index];
+                            Company benefitedCompany = companyList
+                                .where((e) => e.hasBenefit)
+                                .toList()[index];
 
                             return benefitedCompany.name == ""
                                 ? Container(
@@ -546,86 +566,103 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                       color: const Color(0xFF0a0720),
                                       borderRadius: BorderRadius.circular(100),
                                     ),
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          margin:
-                                              const EdgeInsets.only(left: 12),
-                                          width: 55,
-                                          height: 55,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(100),
-                                            color: const Color(0xFF1b193d),
-                                          ),
-                                          child: Center(
-                                            child: Image.asset(
-                                              benefitedCompany.companyLogo,
-                                              width: 27,
-                                              fit: BoxFit.fill,
-                                              color: Colors.white,
+                                    child: GestureDetector(
+                                      onLongPress: () {
+                                        setState(() {
+                                          dialogMode = 1;
+                                          selectedCompanyIndex = index;
+                                          showDialogScreen = true;
+                                          if (dialogWidth != 0) {
+                                            dialogWidth = 0;
+                                            dialogHeight = 0;
+                                          } else {
+                                            dialogWidth = 350;
+                                            dialogHeight = 480;
+                                          }
+                                        });
+                                      },
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            margin:
+                                                const EdgeInsets.only(left: 12),
+                                            width: 55,
+                                            height: 55,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(100),
+                                              color: const Color(0xFF1b193d),
+                                            ),
+                                            child: Center(
+                                              child: Image.asset(
+                                                benefitedCompany.companyLogo,
+                                                width: 27,
+                                                fit: BoxFit.fill,
+                                                color: Colors.white,
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                        Container(
-                                          margin: const EdgeInsets.only(
-                                              top: 12, left: 12),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                benefitedCompany.name,
-                                                style: const TextStyle(
-                                                    fontSize: 20,
-                                                    color: Color(0xFF47417d)),
-                                              ),
-                                              Container(
-                                                margin: const EdgeInsets.only(
-                                                    top: 10),
-                                                child: Row(
-                                                  children: [
-                                                    Text(
-                                                      benefitedCompany.price
-                                                          .toString(),
-                                                      style: TextStyle(
-                                                          fontSize: 16,
-                                                          color: Colors.white
-                                                              .withOpacity(0.8),
-                                                          fontWeight:
-                                                              FontWeight.w500),
-                                                    ),
-                                                    Container(
-                                                      margin:
-                                                          const EdgeInsets.only(
-                                                              left: 8),
-                                                      child: Text(
-                                                        benefitedCompany
-                                                                .hasBenefit
-                                                            ? "+${benefitedCompany.changePercent}%"
-                                                            : "-${benefitedCompany.changePercent}%",
+                                          Container(
+                                            margin: const EdgeInsets.only(
+                                                top: 12, left: 12),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  benefitedCompany.name,
+                                                  style: const TextStyle(
+                                                      fontSize: 20,
+                                                      color: Color(0xFF47417d)),
+                                                ),
+                                                Container(
+                                                  margin: const EdgeInsets.only(
+                                                      top: 10),
+                                                  child: Row(
+                                                    children: [
+                                                      Text(
+                                                        benefitedCompany.price
+                                                            .toString(),
                                                         style: TextStyle(
-                                                            fontSize: 14,
-                                                            color: benefitedCompany
-                                                                    .hasBenefit
-                                                                ? Colors.green
-                                                                    .withOpacity(
-                                                                        0.7)
-                                                                : Colors.red
-                                                                    .withOpacity(
-                                                                        0.7),
+                                                            fontSize: 16,
+                                                            color: Colors.white
+                                                                .withOpacity(
+                                                                    0.8),
                                                             fontWeight:
                                                                 FontWeight
                                                                     .w500),
                                                       ),
-                                                    )
-                                                  ],
-                                                ),
-                                              )
-                                            ],
+                                                      Container(
+                                                        margin: const EdgeInsets
+                                                            .only(left: 8),
+                                                        child: Text(
+                                                          benefitedCompany
+                                                                  .hasBenefit
+                                                              ? "+${benefitedCompany.changePercent}%"
+                                                              : "-${benefitedCompany.changePercent}%",
+                                                          style: TextStyle(
+                                                              fontSize: 14,
+                                                              color: benefitedCompany
+                                                                      .hasBenefit
+                                                                  ? Colors.green
+                                                                      .withOpacity(
+                                                                          0.7)
+                                                                  : Colors.red
+                                                                      .withOpacity(
+                                                                          0.7),
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500),
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                )
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   );
                           },
@@ -660,10 +697,12 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                           shrinkWrap: true,
                           physics: const BouncingScrollPhysics(),
                           scrollDirection: Axis.horizontal,
-                          itemCount: nonBenefitedCompanyList.length,
+                          itemCount:
+                              companyList.where((e) => !e.hasBenefit).length,
                           itemBuilder: (context, index) {
-                            Company nonBenefitedCompany =
-                                nonBenefitedCompanyList.toList()[index];
+                            Company nonBenefitedCompany = companyList
+                                .where((e) => !e.hasBenefit)
+                                .toList()[index];
 
                             return nonBenefitedCompany.name == ""
                                 ? Container(
@@ -688,6 +727,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                 : GestureDetector(
                                     onLongPress: () {
                                       setState(() {
+                                        dialogMode = 2;
+                                        selectedCompanyIndex = index;
                                         showDialogScreen = true;
                                         if (dialogWidth != 0) {
                                           dialogWidth = 0;
@@ -820,209 +861,221 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                       )
               ],
             ),
-            Dismissible(
-              direction: DismissDirection.vertical,
-              onDismissed: (direction) {},
-              key: UniqueKey(),
-              child: AnimatedContainer(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(35),
-                  gradient: const LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Colors.black,
-                      Color(0xFF020010),
-                      Color.fromARGB(255, 0, 6, 166)
-                    ],
-                    stops: [0.9, 0.7, 0.9],
-                  ),
-                ),
-                duration: const Duration(milliseconds: 1500),
-                width: dialogWidth,
-                height: dialogHeight,
-                alignment: Alignment.center,
-                child: Stack(
-                  alignment: Alignment.bottomCenter,
-                  children: [
-                    Container(
-                      width: width - 100,
-                      height: 120,
-                      decoration: const BoxDecoration(
-                        color: Color.fromARGB(255, 2, 4, 89),
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(100),
-                          topRight: Radius.circular(100),
-                        ),
-                      ),
-                    ),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(35),
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-                        child: SizedBox(
-                          width: width,
-                          height: 150,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.only(top: 20),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.only(right: 7),
-                                  child: const Icon(
-                                    Icons.paypal,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                Container(
-                                  child: const Text(
-                                    "PayPal",
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.white),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(top: 30),
-                            child: const Text(
-                              "155,48",
-                              style:
-                                  TextStyle(fontSize: 28, color: Colors.white),
-                            ),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(top: 8),
-                            child: const Text(
-                              "+0,47",
-                              style: TextStyle(
-                                  fontSize: 20, color: Color(0xFF55746b)),
-                            ),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(top: 35),
-                            child: SfSparkLineChart(
-                              axisLineColor: Colors.transparent,
-                              data: const <double>[
-                                1,
-                                5,
-                                -6,
-                                0,
-                                1,
-                                -2,
-                                7,
-                                -7,
-                                -4,
-                                -10,
-                              ],
-                              trackball: const SparkChartTrackball(
-                                  color: Colors.white,
-                                  activationMode: SparkChartActivationMode.tap),
+            newMethod(width)
+          ],
+        ),
+      ),
+    );
+  }
 
-                              // labelDisplayMode: SparkChartLabelDisplayMode.all,
-                              // labelStyle: TextStyle(color: Colors.white),
-                              // marker: SparkChartMarker(
-                              //     displayMode: SparkChartMarkerDisplayMode.all),
-                            ),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(left: 16),
-                            child: Row(
-                              // mainAxisSize: MainAxisSize.min,
-                              children: const [
-                                Text(
-                                  "12:30",
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 15),
-                                ),
-                                SizedBox(
-                                  width: 55,
-                                ),
-                                Text(
-                                  "13:30",
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 15),
-                                ),
-                                SizedBox(
-                                  width: 55,
-                                ),
-                                Text(
-                                  "14:30",
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 15),
-                                ),
-                                SizedBox(
-                                  width: 55,
-                                ),
-                                Text(
-                                  "15:30",
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 15),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(top: 30),
-                            height: 30,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: 5,
-                              itemBuilder: (context, index) {
-                                return AnimatedContainer(
-                                  duration: const Duration(seconds: 1),
-                                  decoration: BoxDecoration(
-                                    color: selectedItem == index
-                                        ? Colors.white
-                                        : const Color(0xFF080720),
-                                    borderRadius: BorderRadius.circular(100),
-                                  ),
-                                  margin:
-                                      const EdgeInsets.only(right: 5, left: 20),
-                                  child: InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        selectedItem = index;
-                                      });
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 10),
-                                      child: Center(
-                                        child: Text(
-                                          "1M",
-                                          style: TextStyle(
-                                            color: selectedItem == index
-                                                ? Colors.black
-                                                : const Color(0xFF504d72),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ],
+  Dismissible newMethod(double width) {
+    Company selectedUnBenefitedCompany = dialogMode == 0
+        ? companyList[selectedCompanyIndex]
+        : companyList
+            .where((e) => dialogMode == 1 ? e.hasBenefit : !e.hasBenefit)
+            .toList()[selectedCompanyIndex];
+    return Dismissible(
+      direction: DismissDirection.vertical,
+      onDismissed: (direction) {
+        setState(() {
+          dialogWidth = 0;
+          dialogHeight = 0;
+        });
+      },
+      key: UniqueKey(),
+      child: AnimatedContainer(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(35),
+          gradient: const LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.black,
+              Color(0xFF020010),
+              Color.fromARGB(255, 0, 6, 166)
+            ],
+            stops: [0.9, 0.7, 0.9],
+          ),
+        ),
+        duration: const Duration(milliseconds: 1500),
+        width: dialogWidth,
+        height: dialogHeight,
+        alignment: Alignment.center,
+        child: Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            Container(
+              width: width - 100,
+              height: 120,
+              decoration: const BoxDecoration(
+                color: Color.fromARGB(255, 2, 4, 89),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(100),
+                  topRight: Radius.circular(100),
                 ),
               ),
-            )
+            ),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(35),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+                child: SizedBox(
+                  width: width,
+                  height: 150,
+                ),
+              ),
+            ),
+            Container(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(top: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(right: 7),
+                          child: const Icon(
+                            Icons.paypal,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Text(
+                          selectedUnBenefitedCompany.name,
+                          style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(top: 30),
+                    child: Text(
+                      selectedUnBenefitedCompany.price.toString(),
+                      style: const TextStyle(fontSize: 28, color: Colors.white),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(top: 8),
+                    child: Text(
+                      selectedUnBenefitedCompany.hasBenefit
+                          ? "+${selectedUnBenefitedCompany.changePercent}%"
+                          : "-${selectedUnBenefitedCompany.changePercent}%",
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: selectedUnBenefitedCompany.hasBenefit
+                            ? Colors.green.withOpacity(0.7)
+                            : Colors.red.withOpacity(0.7),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(top: 35),
+                    child: SfSparkLineChart(
+                      axisLineColor: Colors.transparent,
+                      data: const <double>[
+                        1,
+                        5,
+                        -6,
+                        0,
+                        1,
+                        -2,
+                        7,
+                        -7,
+                        -4,
+                        -10,
+                      ],
+                      trackball: const SparkChartTrackball(
+                          color: Colors.white,
+                          activationMode: SparkChartActivationMode.tap),
+
+                      // labelDisplayMode: SparkChartLabelDisplayMode.all,
+                      // labelStyle: TextStyle(color: Colors.white),
+                      // marker: SparkChartMarker(
+                      //     displayMode: SparkChartMarkerDisplayMode.all),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 16),
+                    child: Row(
+                      // mainAxisSize: MainAxisSize.min,
+                      children: const [
+                        Text(
+                          "12:30",
+                          style: TextStyle(color: Colors.white, fontSize: 15),
+                        ),
+                        SizedBox(
+                          width: 55,
+                        ),
+                        Text(
+                          "13:30",
+                          style: TextStyle(color: Colors.white, fontSize: 15),
+                        ),
+                        SizedBox(
+                          width: 55,
+                        ),
+                        Text(
+                          "14:30",
+                          style: TextStyle(color: Colors.white, fontSize: 15),
+                        ),
+                        SizedBox(
+                          width: 55,
+                        ),
+                        Text(
+                          "15:30",
+                          style: TextStyle(color: Colors.white, fontSize: 15),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(top: 30),
+                    height: 30,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: 5,
+                      itemBuilder: (context, index) {
+                        return AnimatedContainer(
+                          duration: const Duration(seconds: 1),
+                          decoration: BoxDecoration(
+                            color: selectedItem == index
+                                ? Colors.white
+                                : const Color(0xFF080720),
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                          margin: const EdgeInsets.only(right: 5, left: 20),
+                          child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                selectedItem = index;
+                              });
+                            },
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              child: Center(
+                                child: Text(
+                                  "1M",
+                                  style: TextStyle(
+                                    color: selectedItem == index
+                                        ? Colors.black
+                                        : const Color(0xFF504d72),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  )
+                ],
+              ),
+            ),
           ],
         ),
       ),
