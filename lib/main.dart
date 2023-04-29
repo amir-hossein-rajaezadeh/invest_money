@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 
@@ -824,167 +826,200 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
               key: UniqueKey(),
               child: AnimatedContainer(
                 decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(35),
-                    gradient: const LinearGradient(
-                        begin: Alignment.bottomRight,
-                        colors: [
-                          Color(0xFF040240),
-                          Color(0xFF030131),
-                        ])),
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(35),
+                  gradient: const LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.black,
+                      Color(0xFF020010),
+                      Color.fromARGB(255, 0, 6, 166)
+                    ],
+                    stops: [0.9, 0.7, 0.9],
+                  ),
+                ),
                 duration: const Duration(milliseconds: 1500),
                 width: dialogWidth,
                 height: dialogHeight,
                 alignment: Alignment.center,
-                child: Container(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.only(top: 20),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              margin: const EdgeInsets.only(right: 7),
-                              child: const Icon(
-                                Icons.paypal,
-                                color: Colors.white,
-                              ),
+                child: Stack(
+                  alignment: Alignment.bottomCenter,
+                  children: [
+                    Container(
+                      width: width - 100,
+                      height: 120,
+                      decoration: const BoxDecoration(
+                        color: Color.fromARGB(255, 2, 4, 89),
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(100),
+                          topRight: Radius.circular(100),
+                        ),
+                      ),
+                    ),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(35),
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+                        child: SizedBox(
+                          width: width,
+                          height: 150,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(top: 20),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  margin: const EdgeInsets.only(right: 7),
+                                  child: const Icon(
+                                    Icons.paypal,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                Container(
+                                  child: const Text(
+                                    "PayPal",
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.white),
+                                  ),
+                                ),
+                              ],
                             ),
-                            Container(
-                              child: const Text(
-                                "PayPal",
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white),
-                              ),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(top: 30),
+                            child: const Text(
+                              "155,48",
+                              style:
+                                  TextStyle(fontSize: 28, color: Colors.white),
                             ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(top: 30),
-                        child: const Text(
-                          "155,48",
-                          style: TextStyle(fontSize: 28, color: Colors.white),
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(top: 8),
-                        child: const Text(
-                          "+0,47",
-                          style:
-                              TextStyle(fontSize: 20, color: Color(0xFF55746b)),
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(top: 35),
-                        child: SfSparkLineChart(
-                          axisLineColor: Colors.transparent,
-                          data: const <double>[
-                            1,
-                            5,
-                            -6,
-                            0,
-                            1,
-                            -2,
-                            7,
-                            -7,
-                            -4,
-                            -10,
-                          ],
-                          trackball: const SparkChartTrackball(
-                              color: Colors.white,
-                              activationMode: SparkChartActivationMode.tap),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(top: 8),
+                            child: const Text(
+                              "+0,47",
+                              style: TextStyle(
+                                  fontSize: 20, color: Color(0xFF55746b)),
+                            ),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(top: 35),
+                            child: SfSparkLineChart(
+                              axisLineColor: Colors.transparent,
+                              data: const <double>[
+                                1,
+                                5,
+                                -6,
+                                0,
+                                1,
+                                -2,
+                                7,
+                                -7,
+                                -4,
+                                -10,
+                              ],
+                              trackball: const SparkChartTrackball(
+                                  color: Colors.white,
+                                  activationMode: SparkChartActivationMode.tap),
 
-                          // labelDisplayMode: SparkChartLabelDisplayMode.all,
-                          // labelStyle: TextStyle(color: Colors.white),
-                          // marker: SparkChartMarker(
-                          //     displayMode: SparkChartMarkerDisplayMode.all),
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(left: 16),
-                        child: Row(
-                          // mainAxisSize: MainAxisSize.min,
-                          children: const [
-                            Text(
-                              "12:30",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 15),
+                              // labelDisplayMode: SparkChartLabelDisplayMode.all,
+                              // labelStyle: TextStyle(color: Colors.white),
+                              // marker: SparkChartMarker(
+                              //     displayMode: SparkChartMarkerDisplayMode.all),
                             ),
-                            SizedBox(
-                              width: 55,
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(left: 16),
+                            child: Row(
+                              // mainAxisSize: MainAxisSize.min,
+                              children: const [
+                                Text(
+                                  "12:30",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 15),
+                                ),
+                                SizedBox(
+                                  width: 55,
+                                ),
+                                Text(
+                                  "13:30",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 15),
+                                ),
+                                SizedBox(
+                                  width: 55,
+                                ),
+                                Text(
+                                  "14:30",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 15),
+                                ),
+                                SizedBox(
+                                  width: 55,
+                                ),
+                                Text(
+                                  "15:30",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 15),
+                                ),
+                              ],
                             ),
-                            Text(
-                              "13:30",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 15),
-                            ),
-                            SizedBox(
-                              width: 55,
-                            ),
-                            Text(
-                              "14:30",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 15),
-                            ),
-                            SizedBox(
-                              width: 55,
-                            ),
-                            Text(
-                              "15:30",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 15),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(top: 30),
-                        height: 30,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: 5,
-                          itemBuilder: (context, index) {
-                            return AnimatedContainer(
-                              duration: const Duration(seconds: 1),
-                              decoration: BoxDecoration(
-                                color: selectedItem == index
-                                    ? Colors.white
-                                    : const Color(0xFF080720),
-                                borderRadius: BorderRadius.circular(100),
-                              ),
-                              margin: const EdgeInsets.only(right: 5, left: 20),
-                              child: InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    selectedItem = index;
-                                  });
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10),
-                                  child: Center(
-                                    child: Text(
-                                      "1M",
-                                      style: TextStyle(
-                                        color: selectedItem == index
-                                            ? Colors.black
-                                            : const Color(0xFF504d72),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(top: 30),
+                            height: 30,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: 5,
+                              itemBuilder: (context, index) {
+                                return AnimatedContainer(
+                                  duration: const Duration(seconds: 1),
+                                  decoration: BoxDecoration(
+                                    color: selectedItem == index
+                                        ? Colors.white
+                                        : const Color(0xFF080720),
+                                    borderRadius: BorderRadius.circular(100),
+                                  ),
+                                  margin:
+                                      const EdgeInsets.only(right: 5, left: 20),
+                                  child: InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        selectedItem = index;
+                                      });
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10),
+                                      child: Center(
+                                        child: Text(
+                                          "1M",
+                                          style: TextStyle(
+                                            color: selectedItem == index
+                                                ? Colors.black
+                                                : const Color(0xFF504d72),
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      )
-                    ],
-                  ),
+                                );
+                              },
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
             )
