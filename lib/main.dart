@@ -31,50 +31,102 @@ class Company {
   final double changePercent;
   final bool hasBenefit;
   final String companyLogo;
-
+  final ChartData chardData;
   const Company(
       {required this.name,
       required this.changePercent,
       required this.price,
       required this.hasBenefit,
-      required this.companyLogo});
+      required this.companyLogo,
+      required this.chardData});
+}
+
+@immutable
+class ChartData {
+  final List<int> data;
+  const ChartData({
+    required this.data,
+  });
 }
 
 const companyList = [
   Company(
-      name: "", price: 0, changePercent: 0, hasBenefit: true, companyLogo: ""),
+      name: "",
+      price: 0,
+      changePercent: 0,
+      hasBenefit: true,
+      companyLogo: "",
+      chardData: ChartData(data: [
+        1,
+        2,
+        3,
+      ])),
   Company(
       name: "Google",
       price: 100.27,
       changePercent: 0.55,
       hasBenefit: true,
-      companyLogo: "assets/images/google.png"),
+      companyLogo: "assets/images/google.png",
+      chardData: ChartData(data: [
+        4,
+        5,
+        6,
+      ])),
   Company(
       name: "Shopify",
       price: 44.67,
       changePercent: 0.47,
       hasBenefit: false,
-      companyLogo: "assets/images/shopify.png"),
+      companyLogo: "assets/images/shopify.png",
+      chardData: ChartData(data: [
+        7,
+        8,
+        9,
+      ])),
   Company(
       name: "Dropbox",
       price: 19.9,
       changePercent: 1.07,
       hasBenefit: true,
-      companyLogo: "assets/images/dropbox.png"),
+      companyLogo: "assets/images/dropbox.png",
+      chardData: ChartData(data: [
+        10,
+        11,
+        12,
+      ])),
   Company(
       name: "Apple",
       price: 155.48,
       changePercent: 0.47,
       hasBenefit: true,
-      companyLogo: "assets/images/apple.png"),
+      companyLogo: "assets/images/apple.png",
+      chardData: ChartData(data: [
+        1,
+        2,
+        3,
+      ])),
   Company(
       name: "PayPal",
       price: 72.05,
       changePercent: 1.14,
       hasBenefit: false,
-      companyLogo: "assets/images/paypal.png"),
+      companyLogo: "assets/images/paypal.png",
+      chardData: ChartData(data: [
+        1,
+        2,
+        3,
+      ])),
   Company(
-      name: "", price: 0, changePercent: 0, hasBenefit: false, companyLogo: ""),
+      name: "",
+      price: 0,
+      changePercent: 0,
+      hasBenefit: false,
+      companyLogo: "",
+      chardData: ChartData(data: [
+        1,
+        2,
+        3,
+      ])),
 ];
 // var benefitedCompanyList = companyList.where((e) => e.hasBenefit);
 // var nonBenefitedCompanyList = companyList.where((e) => !e.hasBenefit);
@@ -118,6 +170,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   double listviewItemHeight = 80;
   var _color = Colors.white;
   int selectedCompanyMode = 0;
+  bool showDialogMonth = false;
   @override
   void dispose() {
     _firstScrollController.dispose();
@@ -448,6 +501,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                           const Duration(milliseconds: 1000),
                                           onLongerPress);
                                       setState(() {
+                                        dialogMode = 0;
+
                                         selectedCompanyMode = 0;
                                         _controller.forward();
                                         _color = Colors.white;
@@ -606,11 +661,13 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                               onLongerPress);
 
                                           setState(() {
+                                            dialogMode = 1;
+
                                             selectedCompanyMode = 1;
                                             _controller.forward();
-                                            if (selectedCompanyMode == 1) {
-                                              _color = Colors.white;
-                                            }
+
+                                            _color = Colors.white;
+
                                             selectedCompanyIndex = index;
                                           });
                                         },
@@ -835,6 +892,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                                   milliseconds: 1000),
                                               onLongerPress);
                                           setState(() {
+                                            dialogMode = 2;
+
                                             selectedCompanyMode = 2;
                                             _controller.forward();
                                             _color = Colors.white;
@@ -1002,218 +1061,222 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       direction: DismissDirection.vertical,
       onDismissed: (direction) {
         setState(() {
+          showDialogMonth = false;
           showDialogScreen = false;
           dialogWidth = 0;
           dialogHeight = 0;
         });
       },
       key: UniqueKey(),
-      child: AnimatedContainer(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(35),
-          gradient: const LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Colors.black,
-              Color(0xFF020010),
-              Color.fromARGB(255, 0, 6, 166)
-            ],
-            stops: [0.9, 0.4, 0.8],
+      child: GestureDetector(
+        onLongPress: () {
+          setState(() {
+            showDialogMonth = true;
+            dialogHeight = 480;
+          });
+        },
+        child: AnimatedContainer(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(35),
+            gradient: const LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Colors.black,
+                Color(0xFF020010),
+                Color.fromARGB(255, 0, 6, 166)
+              ],
+              stops: [0.9, 0.4, 0.8],
+            ),
           ),
-        ),
-        duration: const Duration(milliseconds: 1500),
-        width: dialogWidth,
-        height: dialogHeight,
-        alignment: Alignment.center,
-        child: Stack(
-          alignment: Alignment.bottomCenter,
-          children: [
-            Container(
-              width: width - 100,
-              height: 120,
-              decoration: const BoxDecoration(
-                color: Color.fromARGB(255, 2, 4, 89),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(100),
-                  topRight: Radius.circular(100),
-                ),
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(bottom: 5),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                  child: SizedBox(
-                    width: width,
-                    height: 150,
+          duration: const Duration(seconds: 3),
+          width: dialogWidth,
+          height: dialogHeight,
+          alignment: Alignment.center,
+          child: Container(
+            color: Colors.transparent,
+            child: Stack(
+              alignment: Alignment.bottomCenter,
+              children: [
+                Container(
+                  width: width - 100,
+                  height: 120,
+                  decoration: const BoxDecoration(
+                    color: Color.fromARGB(255, 2, 4, 89),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(100),
+                      topRight: Radius.circular(100),
+                    ),
                   ),
                 ),
-              ),
-            ),
-            showDialogScreen
-                ? BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-                    child: const SizedBox(
-                      width: 0,
-                      height: 0,
-                    ),
-                  )
-                : Container(),
-            Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(top: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.only(right: 7),
-                          child: const Icon(
-                            Icons.paypal,
-                            color: Colors.white,
-                          ),
-                        ),
-                        Text(
-                          selectedUnBenefitedCompany.name,
-                          style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.white),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 30),
-                    child: Text(
-                      selectedUnBenefitedCompany.price.toString(),
-                      style: const TextStyle(fontSize: 28, color: Colors.white),
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 8),
-                    child: Text(
-                      selectedUnBenefitedCompany.hasBenefit
-                          ? "+${selectedUnBenefitedCompany.changePercent}%"
-                          : "-${selectedUnBenefitedCompany.changePercent}%",
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: selectedUnBenefitedCompany.hasBenefit
-                            ? Colors.green.withOpacity(0.7)
-                            : Colors.red.withOpacity(0.7),
+                Container(
+                  margin: const EdgeInsets.only(bottom: 0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                      child: SizedBox(
+                        width: width,
+                        height: 150,
                       ),
                     ),
                   ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 35),
-                    child: SfSparkLineChart(
-                      axisLineColor: Colors.transparent,
-                      data: const <double>[
-                        1,
-                        5,
-                        -6,
-                        0,
-                        1,
-                        -2,
-                        7,
-                        -7,
-                        -4,
-                        -10,
-                      ],
-                      trackball: const SparkChartTrackball(
-                          color: Colors.white,
-                          activationMode: SparkChartActivationMode.tap),
-
-                      // labelDisplayMode: SparkChartLabelDisplayMode.all,
-                      // labelStyle: TextStyle(color: Colors.white),
-                      // marker: SparkChartMarker(
-                      //     displayMode: SparkChartMarkerDisplayMode.all),
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(left: 16),
-                    child: Row(
-                      // mainAxisSize: MainAxisSize.min,
-                      children: const [
-                        Text(
-                          "12:30",
-                          style: TextStyle(color: Colors.white, fontSize: 15),
+                ),
+                showDialogScreen
+                    ? BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                        child: const SizedBox(
+                          width: 0,
+                          height: 0,
                         ),
-                        SizedBox(
-                          width: 55,
-                        ),
-                        Text(
-                          "13:30",
-                          style: TextStyle(color: Colors.white, fontSize: 15),
-                        ),
-                        SizedBox(
-                          width: 55,
-                        ),
-                        Text(
-                          "14:30",
-                          style: TextStyle(color: Colors.white, fontSize: 15),
-                        ),
-                        SizedBox(
-                          width: 55,
-                        ),
-                        Text(
-                          "15:30",
-                          style: TextStyle(color: Colors.white, fontSize: 15),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 30),
-                    height: 30,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: 5,
-                      itemBuilder: (context, index) {
-                        return AnimatedContainer(
-                          duration: const Duration(seconds: 1),
-                          decoration: BoxDecoration(
-                            color: selectedItem == index
-                                ? Colors.white
-                                : const Color(0xFF080720),
-                            borderRadius: BorderRadius.circular(100),
-                          ),
-                          margin: const EdgeInsets.only(right: 5, left: 20),
-                          child: InkWell(
-                            onTap: () {
-                              setState(() {
-                                selectedItem = index;
-                              });
-                            },
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 10),
-                              child: Center(
-                                child: Text(
-                                  "1M",
-                                  style: TextStyle(
-                                    color: selectedItem == index
-                                        ? Colors.black
-                                        : const Color(0xFF504d72),
-                                  ),
-                                ),
-                              ),
+                      )
+                    : Container(),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(top: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(right: 7),
+                            child: const Icon(
+                              Icons.paypal,
+                              color: Colors.white,
                             ),
                           ),
-                        );
-                      },
+                          Text(
+                            selectedUnBenefitedCompany.name,
+                            style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white),
+                          ),
+                        ],
+                      ),
                     ),
-                  )
-                ],
-              ),
+                    Container(
+                      margin: const EdgeInsets.only(top: 30),
+                      child: Text(
+                        selectedUnBenefitedCompany.price.toString(),
+                        style:
+                            const TextStyle(fontSize: 28, color: Colors.white),
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(top: 8),
+                      child: Text(
+                        selectedUnBenefitedCompany.hasBenefit
+                            ? "+${selectedUnBenefitedCompany.changePercent}%"
+                            : "-${selectedUnBenefitedCompany.changePercent}%",
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: selectedUnBenefitedCompany.hasBenefit
+                              ? Colors.green.withOpacity(0.7)
+                              : Colors.red.withOpacity(0.7),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(top: 35),
+                      child: SfSparkLineChart(
+                        axisLineColor: Colors.transparent,
+                        data: selectedUnBenefitedCompany.chardData.data,
+
+                        trackball: const SparkChartTrackball(
+                            color: Colors.white,
+                            activationMode: SparkChartActivationMode.tap),
+
+                        // labelDisplayMode: SparkChartLabelDisplayMode.all,
+                        // labelStyle: TextStyle(color: Colors.white),
+                        // marker: SparkChartMarker(
+                        //     displayMode: SparkChartMarkerDisplayMode.all),
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(left: 16),
+                      child: Row(
+                        // mainAxisSize: MainAxisSize.min,
+                        children: const [
+                          Text(
+                            "12:30",
+                            style: TextStyle(color: Colors.white, fontSize: 15),
+                          ),
+                          SizedBox(
+                            width: 55,
+                          ),
+                          Text(
+                            "13:30",
+                            style: TextStyle(color: Colors.white, fontSize: 15),
+                          ),
+                          SizedBox(
+                            width: 55,
+                          ),
+                          Text(
+                            "14:30",
+                            style: TextStyle(color: Colors.white, fontSize: 15),
+                          ),
+                          SizedBox(
+                            width: 55,
+                          ),
+                          Text(
+                            "15:30",
+                            style: TextStyle(color: Colors.white, fontSize: 15),
+                          ),
+                        ],
+                      ),
+                    ),
+                    showDialogMonth
+                        ? Container(
+                            margin: const EdgeInsets.only(top: 30),
+                            height: 30,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: 5,
+                              itemBuilder: (context, index) {
+                                return AnimatedContainer(
+                                  duration: const Duration(seconds: 1),
+                                  decoration: BoxDecoration(
+                                    color: selectedItem == index
+                                        ? Colors.white
+                                        : const Color(0xFF080720),
+                                    borderRadius: BorderRadius.circular(100),
+                                  ),
+                                  margin:
+                                      const EdgeInsets.only(right: 5, left: 20),
+                                  child: InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        selectedItem = index;
+                                      });
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10),
+                                      child: Center(
+                                        child: Text(
+                                          "1M",
+                                          style: TextStyle(
+                                            color: selectedItem == index
+                                                ? Colors.black
+                                                : const Color(0xFF504d72),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          )
+                        : Container()
+                  ],
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -1228,7 +1291,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         dialogHeight = 0;
       } else {
         dialogWidth = 350;
-        dialogHeight = 480;
+        dialogHeight = 420;
       }
     });
   }
