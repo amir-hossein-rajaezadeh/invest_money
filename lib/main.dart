@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/sparkcharts.dart';
@@ -78,6 +79,8 @@ const companyList = [
 // var benefitedCompanyList = companyList.where((e) => e.hasBenefit);
 // var nonBenefitedCompanyList = companyList.where((e) => !e.hasBenefit);
 
+Color getRandomColor() => Colors.white;
+
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
 
@@ -94,6 +97,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   late ScrollController _secondScrollController;
   late AnimationController _controller;
   late Animation<double> _animation;
+  late Animation<double> _defaultAnimation;
+
   late Animation<Offset> firstRightToLeftAnim;
   late AnimationController firstRightToLeftAnimController;
   late Animation<Offset> secondRightToLeftAnim;
@@ -111,6 +116,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   double dialogHeight = 0;
   double listviewItemWidth = 215;
   double listviewItemHeight = 80;
+  var _color = Colors.white;
 
   @override
   void dispose() {
@@ -124,11 +130,11 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     _firstScrollController = ScrollController(initialScrollOffset: 140.0);
     _secondScrollController = ScrollController(initialScrollOffset: 140.0);
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 370),
+      duration: const Duration(milliseconds: 180),
       vsync: this,
     );
-    _animation = Tween(begin: 1.0, end: 0.7).animate(_controller);
-
+    _animation = Tween(begin: 1.0, end: 0.8).animate(_controller);
+    _defaultAnimation = Tween(begin: 1.0, end: 1.0).animate(_controller);
     firstRightToLeftAnimController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 2),
@@ -422,7 +428,9 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                       Company company = companyList[index];
                       return company.name != ""
                           ? ScaleTransition(
-                              scale: _animation,
+                              scale: selectedCompanyIndex == index
+                                  ? _animation
+                                  : _defaultAnimation,
                               child: Center(
                                 child: Container(
                                   width: 215,
@@ -437,6 +445,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                     onPointerDown: (details) {
                                       setState(() {
                                         _controller.forward();
+                                        _color = Colors.white;
 
                                         selectedCompanyIndex = index;
                                         // listviewItemWidth = 160;
@@ -448,6 +457,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                       _controller.reverse();
 
                                       setState(() {
+                                        _color = Colors.white.withOpacity(0.7);
+
                                         // selectedCompanyIndex = index;
                                         // listviewItemWidth = 215;
                                         // listviewItemHeight = 90;
@@ -480,13 +491,20 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                             color: const Color(0xFF1b193d),
                                           ),
                                           child: Center(
+                                              child: AnimatedContainer(
+                                            width: 27,
+                                            height: 27,
+                                            duration: const Duration(
+                                                milliseconds: 400),
                                             child: Image.asset(
                                               company.companyLogo,
-                                              width: 27,
-                                              fit: BoxFit.fill,
-                                              color: Colors.white,
+                                              color:
+                                                  selectedCompanyIndex == index
+                                                      ? _color
+                                                      : Colors.white
+                                                          .withOpacity(0.8),
                                             ),
-                                          ),
+                                          )),
                                         ),
                                         Container(
                                           margin: const EdgeInsets.only(
