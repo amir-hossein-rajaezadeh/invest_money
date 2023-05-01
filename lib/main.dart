@@ -31,7 +31,7 @@ class Company {
   final double changePercent;
   final bool hasBenefit;
   final String companyLogo;
-  final ChartData chardData;
+  final List<ChartData> chardData;
   const Company(
       {required this.name,
       required this.changePercent,
@@ -49,6 +49,7 @@ class ChartData {
   });
 }
 
+const List<String> timeList = ["1D", "1W", "1M", "6M", "1Y"];
 const companyList = [
   Company(
       name: "",
@@ -56,77 +57,169 @@ const companyList = [
       changePercent: 0,
       hasBenefit: true,
       companyLogo: "",
-      chardData: ChartData(data: [
-        1,
-        2,
-        3,
-      ])),
+      chardData: [
+        ChartData(
+          data: [8, 2, 15, 12],
+        ),
+      ]),
   Company(
-      name: "Google",
-      price: 100.27,
-      changePercent: 0.55,
-      hasBenefit: true,
-      companyLogo: "assets/images/google.png",
-      chardData: ChartData(data: [
-        4,
-        5,
-        6,
-      ])),
+    name: "Google",
+    price: 100.27,
+    changePercent: 0.55,
+    hasBenefit: true,
+    companyLogo: "assets/images/google.png",
+    chardData: [
+      ChartData(
+        data: [3, 14, 10, 18],
+      ),
+      ChartData(
+        data: [8, 2, 15, 12],
+      ),
+      ChartData(
+        data: [10, 15, 20, 25],
+      ),
+      ChartData(
+        data: [15, 10, 5, 7],
+      ),
+      ChartData(
+        data: [8, 18, 15, 17],
+      )
+    ],
+  ),
   Company(
-      name: "Shopify",
-      price: 44.67,
-      changePercent: 0.47,
-      hasBenefit: false,
-      companyLogo: "assets/images/shopify.png",
-      chardData: ChartData(data: [
-        7,
-        8,
-        9,
-      ])),
+    name: "Shopify",
+    price: 44.67,
+    changePercent: 0.47,
+    hasBenefit: false,
+    companyLogo: "assets/images/shopify.png",
+    chardData: [
+      ChartData(
+        data: [15, 10, 5, 7],
+      ),
+      ChartData(
+        data: [8, 2, 15, 12],
+      ),
+      ChartData(
+        data: [10, 15, 20, 25],
+      ),
+      ChartData(
+        data: [3, 14, 10, 18],
+      ),
+      ChartData(
+        data: [8, 18, 15, 17],
+      ),
+      ChartData(
+        data: [15, 10, 5, 7],
+      ),
+    ],
+  ),
   Company(
       name: "Dropbox",
       price: 19.9,
       changePercent: 1.07,
       hasBenefit: true,
       companyLogo: "assets/images/dropbox.png",
-      chardData: ChartData(data: [
-        10,
-        11,
-        12,
-      ])),
+      chardData: [
+        ChartData(
+          data: [8, 18, 15, 17],
+        ),
+        ChartData(
+          data: [15, 10, 5, 7],
+        ),
+        ChartData(
+          data: [3, 14, 10, 18],
+        ),
+        ChartData(
+          data: [8, 2, 15, 12],
+        ),
+        ChartData(
+          data: [8, 18, 15, 17],
+        ),
+        ChartData(
+          data: [10, 15, 20, 25],
+        ),
+        ChartData(
+          data: [15, 10, 5, 7],
+        ),
+      ]),
   Company(
       name: "Apple",
       price: 155.48,
       changePercent: 0.47,
       hasBenefit: true,
       companyLogo: "assets/images/apple.png",
-      chardData: ChartData(data: [
-        1,
-        2,
-        3,
-      ])),
+      chardData: [
+        ChartData(
+          data: [
+            7,
+            14,
+            18,
+            20,
+          ],
+        ),
+        ChartData(
+          data: [8, 18, 15, 17],
+        ),
+        ChartData(
+          data: [10, 15, 20, 25],
+        ),
+        ChartData(
+          data: [15, 10, 5, 7],
+        ),
+        ChartData(
+          data: [8, 2, 15, 12],
+        ),
+        ChartData(
+          data: [15, 10, 5, 7],
+        ),
+        ChartData(
+          data: [8, 18, 15, 17],
+        ),
+        ChartData(
+          data: [3, 14, 10, 18],
+        ),
+      ]),
   Company(
       name: "PayPal",
       price: 72.05,
       changePercent: 1.14,
       hasBenefit: false,
       companyLogo: "assets/images/paypal.png",
-      chardData: ChartData(data: [
-        1,
-        2,
-        3,
-      ])),
+      chardData: [
+        ChartData(
+          data: [10, 15, 20, 25],
+        ),
+        ChartData(
+          data: [8, 2, 15, 12],
+        ),
+        ChartData(
+          data: [10, 15, 20, 25],
+        ),
+        ChartData(
+          data: [3, 14, 10, 18],
+        ),
+        ChartData(
+          data: [8, 18, 15, 17],
+        ),
+        ChartData(
+          data: [15, 10, 5, 7],
+        ),
+      ]),
   Company(
       name: "",
       price: 0,
       changePercent: 0,
       hasBenefit: false,
       companyLogo: "",
-      chardData: ChartData(data: [
-        1,
-        2,
-        3,
-      ])),
+      chardData: [
+        ChartData(
+          data: [
+            1,
+            2,
+            3,
+          ],
+        ),
+      ]),
 ];
 // var benefitedCompanyList = companyList.where((e) => e.hasBenefit);
 // var nonBenefitedCompanyList = companyList.where((e) => !e.hasBenefit);
@@ -1061,6 +1154,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       direction: DismissDirection.vertical,
       onDismissed: (direction) {
         setState(() {
+          selectedItem = 0;
           showDialogMonth = false;
           showDialogScreen = false;
           dialogWidth = 0;
@@ -1180,25 +1274,20 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                       ),
                     ),
                     Container(
-                      margin: const EdgeInsets.only(top: 35),
+                      margin: const EdgeInsets.only(
+                          top: 35, bottom: 10, left: 15, right: 15),
                       child: SfSparkLineChart(
                         axisLineColor: Colors.transparent,
-                        data: selectedUnBenefitedCompany.chardData.data,
-
+                        data: selectedUnBenefitedCompany
+                            .chardData[selectedItem].data,
                         trackball: const SparkChartTrackball(
                             color: Colors.white,
                             activationMode: SparkChartActivationMode.tap),
-
-                        // labelDisplayMode: SparkChartLabelDisplayMode.all,
-                        // labelStyle: TextStyle(color: Colors.white),
-                        // marker: SparkChartMarker(
-                        //     displayMode: SparkChartMarkerDisplayMode.all),
                       ),
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 16),
                       child: Row(
-                        // mainAxisSize: MainAxisSize.min,
                         children: const [
                           Text(
                             "12:30",
@@ -1234,8 +1323,9 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                             height: 30,
                             child: ListView.builder(
                               scrollDirection: Axis.horizontal,
-                              itemCount: 5,
+                              itemCount: timeList.length,
                               itemBuilder: (context, index) {
+                                String title = timeList[index];
                                 return AnimatedContainer(
                                   duration: const Duration(seconds: 1),
                                   decoration: BoxDecoration(
@@ -1257,7 +1347,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                           horizontal: 10),
                                       child: Center(
                                         child: Text(
-                                          "1M",
+                                          title,
                                           style: TextStyle(
                                             color: selectedItem == index
                                                 ? Colors.black
