@@ -117,7 +117,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   double listviewItemWidth = 215;
   double listviewItemHeight = 80;
   var _color = Colors.white;
-
+  int selectedCompanyMode = 0;
   @override
   void dispose() {
     _firstScrollController.dispose();
@@ -428,7 +428,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                       Company company = companyList[index];
                       return company.name != ""
                           ? ScaleTransition(
-                              scale: selectedCompanyIndex == index
+                              scale: selectedCompanyMode == 0 &&
+                                      selectedCompanyIndex == index
                                   ? _animation
                                   : _defaultAnimation,
                               child: Center(
@@ -442,128 +443,116 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                     borderRadius: BorderRadius.circular(100),
                                   ),
                                   child: Listener(
-                                    onPointerDown: (details) {
+                                    onPointerDown: (details) async {
+                                      _timer = Timer(
+                                          const Duration(milliseconds: 1000),
+                                          onLongerPress);
                                       setState(() {
+                                        selectedCompanyMode = 0;
                                         _controller.forward();
                                         _color = Colors.white;
-
                                         selectedCompanyIndex = index;
-                                        // listviewItemWidth = 160;
-                                        // listviewItemHeight = 60;
                                       });
-                                      print("called");
                                     },
                                     onPointerUp: (details) {
+                                      _timer.cancel();
                                       _controller.reverse();
-
                                       setState(() {
                                         _color = Colors.white.withOpacity(0.7);
-
-                                        // selectedCompanyIndex = index;
-                                        // listviewItemWidth = 215;
-                                        // listviewItemHeight = 90;
                                       });
                                     },
-
-                                    // onPanCancel: () => _timer?.cancel(),
-                                    // onPanDown: (_) => {
-                                    //   _timer = Timer(Duration(seconds: 1), () {
-                                    //     setState(() {
-                                    //       selectedCompanyIndex = index;
-                                    //       listviewItemWidth = 120;
-                                    //       listviewItemHeight = 40;
-                                    //     });
-                                    //     print("called");
-                                    //     // Your function goes here
-                                    //   })
-                                    // },
-
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          margin:
-                                              const EdgeInsets.only(left: 12),
-                                          width: 55,
-                                          height: 55,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(100),
-                                            color: const Color(0xFF1b193d),
-                                          ),
-                                          child: Center(
-                                              child: AnimatedContainer(
-                                            width: 27,
-                                            height: 27,
-                                            duration: const Duration(
-                                                milliseconds: 400),
-                                            child: Image.asset(
-                                              company.companyLogo,
-                                              color:
-                                                  selectedCompanyIndex == index
-                                                      ? _color
-                                                      : Colors.white
-                                                          .withOpacity(0.8),
+                                    child: Container(
+                                      color: Colors.transparent,
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            margin:
+                                                const EdgeInsets.only(left: 12),
+                                            width: 55,
+                                            height: 55,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(100),
+                                              color: const Color(0xFF1b193d),
                                             ),
-                                          )),
-                                        ),
-                                        Container(
-                                          margin: const EdgeInsets.only(
-                                              top: 12, left: 12),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                company.name,
-                                                style: const TextStyle(
-                                                  fontSize: 20,
-                                                  color: Color(0xFF47417d),
-                                                ),
+                                            child: Center(
+                                                child: AnimatedContainer(
+                                              width: 27,
+                                              height: 27,
+                                              duration: const Duration(
+                                                  milliseconds: 400),
+                                              child: Image.asset(
+                                                company.companyLogo,
+                                                color: selectedCompanyIndex ==
+                                                            index &&
+                                                        selectedCompanyMode == 0
+                                                    ? _color
+                                                    : Colors.white
+                                                        .withOpacity(0.8),
                                               ),
-                                              Container(
-                                                margin: const EdgeInsets.only(
-                                                    top: 10),
-                                                child: Row(
-                                                  children: [
-                                                    Text(
-                                                      company.price.toString(),
-                                                      style: TextStyle(
-                                                          fontSize: 16,
-                                                          color: Colors.white
-                                                              .withOpacity(0.8),
-                                                          fontWeight:
-                                                              FontWeight.w500),
-                                                    ),
-                                                    Container(
-                                                      margin:
-                                                          const EdgeInsets.only(
-                                                              left: 8),
-                                                      child: Text(
-                                                        company.hasBenefit
-                                                            ? "+${company.changePercent}%"
-                                                            : "-${company.changePercent}%",
+                                            )),
+                                          ),
+                                          Container(
+                                            margin: const EdgeInsets.only(
+                                                top: 12, left: 12),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  company.name,
+                                                  style: const TextStyle(
+                                                    fontSize: 20,
+                                                    color: Color(0xFF47417d),
+                                                  ),
+                                                ),
+                                                Container(
+                                                  margin: const EdgeInsets.only(
+                                                      top: 10),
+                                                  child: Row(
+                                                    children: [
+                                                      Text(
+                                                        company.price
+                                                            .toString(),
                                                         style: TextStyle(
-                                                            fontSize: 14,
-                                                            color: company
-                                                                    .hasBenefit
-                                                                ? Colors.green
-                                                                    .withOpacity(
-                                                                        0.7)
-                                                                : Colors.red
-                                                                    .withOpacity(
-                                                                        0.7),
+                                                            fontSize: 16,
+                                                            color: Colors.white
+                                                                .withOpacity(
+                                                                    0.8),
                                                             fontWeight:
                                                                 FontWeight
                                                                     .w500),
                                                       ),
-                                                    )
-                                                  ],
-                                                ),
-                                              )
-                                            ],
+                                                      Container(
+                                                        margin: const EdgeInsets
+                                                            .only(left: 8),
+                                                        child: Text(
+                                                          company.hasBenefit
+                                                              ? "+${company.changePercent}%"
+                                                              : "-${company.changePercent}%",
+                                                          style: TextStyle(
+                                                              fontSize: 14,
+                                                              color: company
+                                                                      .hasBenefit
+                                                                  ? Colors.green
+                                                                      .withOpacity(
+                                                                          0.7)
+                                                                  : Colors.red
+                                                                      .withOpacity(
+                                                                          0.7),
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500),
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                )
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -592,8 +581,159 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                               .where((e) => e.hasBenefit)
                               .toList()[index];
 
-                          return benefitedCompany.name == ""
-                              ? Container(
+                          return benefitedCompany.name != ""
+                              ? ScaleTransition(
+                                  scale: selectedCompanyMode == 1 &&
+                                          selectedCompanyIndex == index
+                                      ? _animation
+                                      : _defaultAnimation,
+                                  child: Center(
+                                    child: Container(
+                                      width: 215,
+                                      height: 80,
+                                      margin: EdgeInsets.only(
+                                          right: 15, left: index == 0 ? 30 : 0),
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFF0a0720),
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                      ),
+                                      child: Listener(
+                                        onPointerDown: (details) {
+                                          _timer = Timer(
+                                              const Duration(
+                                                  milliseconds: 1000),
+                                              onLongerPress);
+
+                                          setState(() {
+                                            selectedCompanyMode = 1;
+                                            _controller.forward();
+                                            if (selectedCompanyMode == 1) {
+                                              _color = Colors.white;
+                                            }
+                                            selectedCompanyIndex = index;
+                                          });
+                                        },
+                                        onPointerUp: (details) {
+                                          _timer.cancel();
+
+                                          _controller.reverse();
+                                          setState(() {
+                                            _color =
+                                                Colors.white.withOpacity(0.7);
+                                          });
+                                        },
+                                        child: Container(
+                                          color: Colors.transparent,
+                                          child: Row(
+                                            children: [
+                                              Container(
+                                                margin: const EdgeInsets.only(
+                                                    left: 12),
+                                                width: 55,
+                                                height: 55,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          100),
+                                                  color:
+                                                      const Color(0xFF1b193d),
+                                                ),
+                                                child: Center(
+                                                    child: AnimatedContainer(
+                                                  width: 27,
+                                                  height: 27,
+                                                  duration: const Duration(
+                                                      milliseconds: 400),
+                                                  child: Image.asset(
+                                                    benefitedCompany
+                                                        .companyLogo,
+                                                    color: selectedCompanyMode ==
+                                                                1 &&
+                                                            selectedCompanyIndex ==
+                                                                index
+                                                        ? _color
+                                                        : Colors.white
+                                                            .withOpacity(0.8),
+                                                  ),
+                                                )),
+                                              ),
+                                              Container(
+                                                margin: const EdgeInsets.only(
+                                                    top: 12, left: 12),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      benefitedCompany.name,
+                                                      style: const TextStyle(
+                                                        fontSize: 20,
+                                                        color:
+                                                            Color(0xFF47417d),
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      margin:
+                                                          const EdgeInsets.only(
+                                                              top: 10),
+                                                      child: Row(
+                                                        children: [
+                                                          Text(
+                                                            benefitedCompany
+                                                                .price
+                                                                .toString(),
+                                                            style: TextStyle(
+                                                                fontSize: 16,
+                                                                color: Colors
+                                                                    .white
+                                                                    .withOpacity(
+                                                                        0.8),
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500),
+                                                          ),
+                                                          Container(
+                                                            margin:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    left: 8),
+                                                            child: Text(
+                                                              benefitedCompany
+                                                                      .hasBenefit
+                                                                  ? "+${benefitedCompany.changePercent}%"
+                                                                  : "-${benefitedCompany.changePercent}%",
+                                                              style: TextStyle(
+                                                                  fontSize: 14,
+                                                                  color: benefitedCompany
+                                                                          .hasBenefit
+                                                                      ? Colors
+                                                                          .green
+                                                                          .withOpacity(
+                                                                              0.7)
+                                                                      : Colors
+                                                                          .red
+                                                                          .withOpacity(
+                                                                              0.7),
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500),
+                                                            ),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : Container(
                                   height: 80,
                                   margin: const EdgeInsets.only(left: 5),
                                   width: 215,
@@ -611,113 +751,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                   ),
                                   child: Row(
                                     children: [],
-                                  ),
-                                )
-                              : Container(
-                                  height: 80,
-                                  margin: EdgeInsets.only(
-                                      right: 18, left: index == 0 ? 40 : 0),
-                                  width: 215,
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFF0a0720),
-                                    borderRadius: BorderRadius.circular(100),
-                                  ),
-                                  child: GestureDetector(
-                                    onLongPress: () {
-                                      setState(() {
-                                        dialogMode = 1;
-                                        selectedCompanyIndex = index;
-                                        showDialogScreen = true;
-                                        if (dialogWidth != 0) {
-                                          dialogWidth = 0;
-                                          dialogHeight = 0;
-                                        } else {
-                                          dialogWidth = 350;
-                                          dialogHeight = 480;
-                                        }
-                                      });
-                                    },
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          margin:
-                                              const EdgeInsets.only(left: 12),
-                                          width: 55,
-                                          height: 55,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(100),
-                                            color: const Color(0xFF1b193d),
-                                          ),
-                                          child: Center(
-                                            child: Image.asset(
-                                              benefitedCompany.companyLogo,
-                                              width: 27,
-                                              fit: BoxFit.fill,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ),
-                                        Container(
-                                          margin: const EdgeInsets.only(
-                                              top: 12, left: 12),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                benefitedCompany.name,
-                                                style: const TextStyle(
-                                                    fontSize: 20,
-                                                    color: Color(0xFF47417d)),
-                                              ),
-                                              Container(
-                                                margin: const EdgeInsets.only(
-                                                    top: 10),
-                                                child: Row(
-                                                  children: [
-                                                    Text(
-                                                      benefitedCompany.price
-                                                          .toString(),
-                                                      style: TextStyle(
-                                                          fontSize: 16,
-                                                          color: Colors.white
-                                                              .withOpacity(0.8),
-                                                          fontWeight:
-                                                              FontWeight.w500),
-                                                    ),
-                                                    Container(
-                                                      margin:
-                                                          const EdgeInsets.only(
-                                                              left: 8),
-                                                      child: Text(
-                                                        benefitedCompany
-                                                                .hasBenefit
-                                                            ? "+${benefitedCompany.changePercent}%"
-                                                            : "-${benefitedCompany.changePercent}%",
-                                                        style: TextStyle(
-                                                            fontSize: 14,
-                                                            color: benefitedCompany
-                                                                    .hasBenefit
-                                                                ? Colors.green
-                                                                    .withOpacity(
-                                                                        0.7)
-                                                                : Colors.red
-                                                                    .withOpacity(
-                                                                        0.7),
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w500),
-                                                      ),
-                                                    )
-                                                  ],
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
                                   ),
                                 );
                         },
@@ -779,111 +812,151 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                   ),
                                   child: Row(children: []),
                                 )
-                              : GestureDetector(
-                                  onLongPress: () {
-                                    setState(() {
-                                      dialogMode = 2;
-                                      selectedCompanyIndex = index;
-                                      showDialogScreen = true;
-                                      if (dialogWidth != 0) {
-                                        dialogWidth = 0;
-                                        dialogHeight = 0;
-                                      } else {
-                                        dialogWidth = 350;
-                                        dialogHeight = 480;
-                                      }
-                                    });
-                                    print("longPress");
-                                  },
-                                  child: Container(
-                                    height: 80,
-                                    margin: const EdgeInsets.only(
-                                        right: 18, left: 2),
-                                    width: 215,
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xFF0a0720),
-                                      borderRadius: BorderRadius.circular(100),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          margin:
-                                              const EdgeInsets.only(left: 12),
-                                          width: 55,
-                                          height: 55,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(100),
-                                            color: const Color(0xFF1b193d),
-                                          ),
-                                          child: Center(
-                                            child: Image.asset(
-                                              nonBenefitedCompany.companyLogo,
-                                              width: 27,
-                                              fit: BoxFit.fill,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ),
-                                        Container(
-                                          margin: const EdgeInsets.only(
-                                              top: 12, left: 12),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                              : ScaleTransition(
+                                  scale: selectedCompanyMode == 2 &&
+                                          selectedCompanyIndex == index
+                                      ? _animation
+                                      : _defaultAnimation,
+                                  child: Center(
+                                    child: Container(
+                                      width: 215,
+                                      height: 80,
+                                      margin: EdgeInsets.only(
+                                          right: 15, left: index == 0 ? 30 : 0),
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFF0a0720),
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                      ),
+                                      child: Listener(
+                                        onPointerDown: (details) {
+                                          _timer = Timer(
+                                              const Duration(
+                                                  milliseconds: 1000),
+                                              onLongerPress);
+                                          setState(() {
+                                            selectedCompanyMode = 2;
+                                            _controller.forward();
+                                            _color = Colors.white;
+                                            selectedCompanyIndex = index;
+                                          });
+                                        },
+                                        onPointerUp: (details) {
+                                          _timer.cancel();
+
+                                          _controller.reverse();
+                                          setState(() {
+                                            _color =
+                                                Colors.white.withOpacity(0.7);
+                                          });
+                                        },
+                                        child: Container(
+                                          color: Colors.transparent,
+                                          child: Row(
                                             children: [
-                                              Text(
-                                                nonBenefitedCompany.name,
-                                                style: const TextStyle(
-                                                    fontSize: 20,
-                                                    color: Color(0xFF47417d)),
+                                              Container(
+                                                margin: const EdgeInsets.only(
+                                                    left: 12),
+                                                width: 55,
+                                                height: 55,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          100),
+                                                  color:
+                                                      const Color(0xFF1b193d),
+                                                ),
+                                                child: Center(
+                                                    child: AnimatedContainer(
+                                                  width: 27,
+                                                  height: 27,
+                                                  duration: const Duration(
+                                                      milliseconds: 400),
+                                                  child: Image.asset(
+                                                    nonBenefitedCompany
+                                                        .companyLogo,
+                                                    color: selectedCompanyMode ==
+                                                                2 &&
+                                                            selectedCompanyIndex ==
+                                                                index
+                                                        ? _color
+                                                        : Colors.white
+                                                            .withOpacity(0.8),
+                                                  ),
+                                                )),
                                               ),
                                               Container(
                                                 margin: const EdgeInsets.only(
-                                                    top: 10),
-                                                child: Row(
+                                                    top: 12, left: 12),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
                                                   children: [
                                                     Text(
-                                                      nonBenefitedCompany.price
-                                                          .toString(),
-                                                      style: TextStyle(
-                                                          fontSize: 16,
-                                                          color: Colors.white
-                                                              .withOpacity(0.8),
-                                                          fontWeight:
-                                                              FontWeight.w500),
+                                                      nonBenefitedCompany.name,
+                                                      style: const TextStyle(
+                                                        fontSize: 20,
+                                                        color:
+                                                            Color(0xFF47417d),
+                                                      ),
                                                     ),
                                                     Container(
                                                       margin:
                                                           const EdgeInsets.only(
-                                                              left: 8),
-                                                      child: Text(
-                                                        nonBenefitedCompany
-                                                                .hasBenefit
-                                                            ? "+${nonBenefitedCompany.changePercent}%"
-                                                            : "-${nonBenefitedCompany.changePercent}%",
-                                                        style: TextStyle(
-                                                            fontSize: 14,
-                                                            color: nonBenefitedCompany
-                                                                    .hasBenefit
-                                                                ? Colors.green
+                                                              top: 10),
+                                                      child: Row(
+                                                        children: [
+                                                          Text(
+                                                            nonBenefitedCompany
+                                                                .price
+                                                                .toString(),
+                                                            style: TextStyle(
+                                                                fontSize: 16,
+                                                                color: Colors
+                                                                    .white
                                                                     .withOpacity(
-                                                                        0.7)
-                                                                : Colors.red
-                                                                    .withOpacity(
-                                                                        0.7),
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w500),
+                                                                        0.8),
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500),
+                                                          ),
+                                                          Container(
+                                                            margin:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    left: 8),
+                                                            child: Text(
+                                                              nonBenefitedCompany
+                                                                      .hasBenefit
+                                                                  ? "+${nonBenefitedCompany.changePercent}%"
+                                                                  : "-${nonBenefitedCompany.changePercent}%",
+                                                              style: TextStyle(
+                                                                  fontSize: 14,
+                                                                  color: nonBenefitedCompany
+                                                                          .hasBenefit
+                                                                      ? Colors
+                                                                          .green
+                                                                          .withOpacity(
+                                                                              0.7)
+                                                                      : Colors
+                                                                          .red
+                                                                          .withOpacity(
+                                                                              0.7),
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500),
+                                                            ),
+                                                          )
+                                                        ],
                                                       ),
                                                     )
                                                   ],
                                                 ),
-                                              )
+                                              ),
                                             ],
                                           ),
                                         ),
-                                      ],
+                                      ),
                                     ),
                                   ),
                                 );
@@ -1144,5 +1217,19 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         ),
       ),
     );
+  }
+
+  void onLongerPress() {
+    print('onLongerPress called');
+    setState(() {
+      showDialogScreen = true;
+      if (dialogWidth != 0) {
+        dialogWidth = 0;
+        dialogHeight = 0;
+      } else {
+        dialogWidth = 350;
+        dialogHeight = 480;
+      }
+    });
   }
 }
