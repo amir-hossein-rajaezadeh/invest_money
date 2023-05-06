@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -7,8 +6,6 @@ import 'package:invest_money/screens/main/view_model/main_view_model.dart';
 import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 
 import '../../../data/company.dart';
-
-const List<String> timeList = ["1D", "1W", "1M", "6M", "1Y"];
 
 class MainBody extends ConsumerStatefulWidget {
   const MainBody({super.key});
@@ -21,8 +18,10 @@ class _MainBodyState extends ConsumerState<MainBody>
     with TickerProviderStateMixin {
   @override
   void dispose() {
-    // _firstScrollController.dispose();
-    // _secondScrollController.dispose();
+    final mainViewModel = ref.watch(mainViewModelProvider);
+
+    mainViewModel.firstScrollController.dispose();
+    mainViewModel.secondScrollController.dispose();
     super.dispose();
   }
 
@@ -30,7 +29,7 @@ class _MainBodyState extends ConsumerState<MainBody>
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final mainViewModel = ref.watch(mainViewModelProvider);
-      initStateFun(mainViewModel);
+      mainViewModel.setInitStateAnim(this);
     });
 
     super.initState();
@@ -54,108 +53,6 @@ class _MainBodyState extends ConsumerState<MainBody>
         dismissableDilog(width, mainViewModel),
       ],
     );
-  }
-
-  void initStateFun(MainViewModel mainViewModel) {
-    mainViewModel.firstScrollController =
-        ScrollController(initialScrollOffset: 140.0);
-    mainViewModel.secondScrollController =
-        ScrollController(initialScrollOffset: 140.0);
-    mainViewModel.dialogController = AnimationController(
-      duration: const Duration(milliseconds: 1100),
-      vsync: this,
-    );
-    mainViewModel.controller = AnimationController(
-      duration: const Duration(milliseconds: 180),
-      vsync: this,
-    );
-
-    mainViewModel.dialogScaleController = AnimationController(
-      duration: const Duration(milliseconds: 1100),
-      vsync: this,
-    );
-
-    mainViewModel.animation =
-        Tween(begin: 1.0, end: 0.8).animate(mainViewModel.controller);
-    mainViewModel.defaultAnimation =
-        Tween(begin: 1.0, end: 1.0).animate(mainViewModel.controller);
-    mainViewModel.firstRightToLeftAnimController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 500),
-    );
-
-    mainViewModel.boxesController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1300),
-    );
-    mainViewModel.rightToLeftListviewController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1000),
-    );
-    mainViewModel.firstRightToLeftAnim = Tween(
-      begin: const Offset(2, 0),
-      end: const Offset(-1, 0),
-    ).animate(CurvedAnimation(
-        parent: mainViewModel.firstRightToLeftAnimController,
-        curve: Curves.easeOut));
-
-    mainViewModel.secondRightToLeftAnim = Tween(
-      begin: const Offset(-2, 0),
-      end: const Offset(1, 0),
-    ).animate(CurvedAnimation(
-        parent: mainViewModel.firstRightToLeftAnimController,
-        curve: Curves.easeOut));
-
-    mainViewModel.rightBoxAnim = Tween(
-      begin: const Offset(8, 0),
-      end: const Offset(0, 0),
-    ).animate(CurvedAnimation(
-        parent: mainViewModel.boxesController, curve: Curves.easeOut));
-
-    mainViewModel.leftBoxAnim = Tween(
-      begin: const Offset(-2, 0),
-      end: const Offset(0, 0),
-    ).animate(CurvedAnimation(
-        parent: mainViewModel.boxesController, curve: Curves.easeOut));
-
-    mainViewModel.rightToLeftListviewAnim = Tween(
-      begin: const Offset(2, 0),
-      end: const Offset(0, 0),
-    ).animate(mainViewModel.rightToLeftListviewController);
-
-    mainViewModel.dialogAnim = Tween(
-      begin: const Offset(1.0, 1.0),
-      end: mainViewModel.currentItemPostion,
-    ).animate(mainViewModel.dialogController);
-
-    Future.delayed(const Duration(microseconds: 0)).then((value) async {
-      setState(() {
-        mainViewModel.height = 300;
-      });
-      await Future.delayed(
-        const Duration(milliseconds: 700),
-      );
-      mainViewModel.boxesController.forward();
-    });
-
-    mainViewModel.boxesController.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        mainViewModel.rightToLeftListviewController.forward();
-      }
-    });
-    mainViewModel.rightToLeftListviewController.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        mainViewModel.firstRightToLeftAnimController.forward();
-      }
-    });
-
-    mainViewModel.firstRightToLeftAnimController.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        setState(() {
-          mainViewModel.showListView = true;
-        });
-      }
-    });
   }
 
   Widget firstWidget(double height) {
@@ -455,7 +352,7 @@ class _MainBodyState extends ConsumerState<MainBody>
         : listViewIndex == 1
             ? companyList.where((e) => e.hasBenefit).toList()[index]
             : companyList.where((e) => !e.hasBenefit).toList()[index];
-
+    mainViewModel.setFirstAndLastItemColor(listViewIndex);
     return company.name != ""
         ? ScaleTransition(
             scale: mainViewModel.selectedCompanyIndex == index
@@ -472,38 +369,12 @@ class _MainBodyState extends ConsumerState<MainBody>
                 ),
                 child: Listener(
                   onPointerDown: (details) async {
-                    // print(details.localPosition);
-                    // _dialogScaleController.forward();
-                    mainViewModel.timer = Timer(
-                      const Duration(milliseconds: 1000), () {},
-                      // onLongerPress
-                    );
-                    setState(() {
-                      mainViewModel.currentItemPostion = details.localPosition;
-                      mainViewModel.dialogMode = listViewIndex;
-                      mainViewModel.selectedCompanyMode = listViewIndex;
-                      mainViewModel.controller.forward();
-                      mainViewModel.color = Colors.white;
-                      mainViewModel.selectedCompanyIndex = index;
-                    });
-
-                    // dialogAnim = Tween(
-                    //   begin: const Offset(0, 1),
-                    //   end: const Offset(0, 0),
-                    // ).animate(CurvedAnimation(
-                    //     parent: _dialogController,
-                    //     curve: Curves.fastOutSlowIn));
-                    // _dialogController.forward();
+                    mainViewModel.setListViewItemClicked(
+                        true, index, listViewIndex, details.localPosition);
                   },
                   onPointerUp: (details) {
-                    // _dialogScaleController.reverse();
-                    // _dialogController.reverse();
-
-                    mainViewModel.timer.cancel();
-                    mainViewModel.controller.reverse();
-                    setState(() {
-                      mainViewModel.color = Colors.white.withOpacity(0.7);
-                    });
+                    mainViewModel.setListViewItemClicked(
+                        false, index, listViewIndex, details.localPosition);
                   },
                   child: Container(
                     color: Colors.transparent,
@@ -589,20 +460,9 @@ class _MainBodyState extends ConsumerState<MainBody>
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(100),
                   gradient: LinearGradient(
-                    begin: Alignment.topRight,
-                    end: Alignment.topLeft,
-                    colors: [
-                      listViewIndex == 1
-                          ? const Color(0xFF3fdcd6)
-                          : const Color(0xFF5810df),
-                      listViewIndex == 1
-                          ? const Color(0xFF48eace)
-                          : const Color(0xFF4f0cdc),
-                      listViewIndex == 1
-                          ? const Color(0xFF90e6cf)
-                          : const Color(0xFF0e07ca)
-                    ],
-                  ),
+                      begin: Alignment.topRight,
+                      end: Alignment.topLeft,
+                      colors: mainViewModel.firstAndLastColoredItem),
                 ),
                 child: Row(
                   children: const [],
@@ -610,229 +470,230 @@ class _MainBodyState extends ConsumerState<MainBody>
               );
   }
 
-  SlideTransition dismissableDilog(double width, MainViewModel mainViewModel) {
-    Company selectedUnBenefitedCompany = mainViewModel.dialogMode == 0
+  Widget dismissableDilog(double width, MainViewModel mainViewModel) {
+    Company company = mainViewModel.dialogMode == 0
         ? companyList[mainViewModel.selectedCompanyIndex]
         : companyList
             .where((e) =>
                 mainViewModel.dialogMode == 1 ? e.hasBenefit : !e.hasBenefit)
             .toList()[mainViewModel.selectedCompanyIndex];
-    return SlideTransition(
-      position: mainViewModel.dialogAnim,
-      child: ScaleTransition(
-        scale: mainViewModel.dialogScaleController,
-        child: GestureDetector(
-          onLongPress: () {
-            setState(() {
-              mainViewModel.showDialogMonth = true;
-              mainViewModel.dialogHeight = 480;
-            });
-          },
-          child: AnimatedContainer(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(35),
-              gradient: const LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Colors.black,
-                  Color(0xFF020010),
-                  Color.fromARGB(255, 0, 6, 166)
-                ],
-                stops: [0.9, 0.4, 0.8],
+    return mainViewModel.showDialogScreen
+        ? Dismissible(
+            key: UniqueKey(),
+            child: dialogUI(mainViewModel, width, company),
+          )
+        : SlideTransition(
+            position: mainViewModel.dialogAnim,
+            child: ScaleTransition(
+              scale: mainViewModel.dialogScaleController,
+              child: GestureDetector(
+                onLongPress: () {
+                  setState(() {
+                    mainViewModel.showDialogMonth = true;
+                    mainViewModel.dialogHeight = 480;
+                  });
+                },
+                child: dialogUI(mainViewModel, width, company),
               ),
             ),
-            duration: const Duration(milliseconds: 500),
-            width: mainViewModel.dialogWidth,
-            height: mainViewModel.dialogHeight,
-            alignment: Alignment.center,
-            child: Container(
-              color: Colors.transparent,
-              child: Stack(
-                alignment: Alignment.bottomCenter,
-                children: [
-                  Container(
-                    width: width - 100,
-                    height: 120,
-                    decoration: const BoxDecoration(
-                      color: Color.fromARGB(255, 2, 4, 89),
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(100),
-                        topRight: Radius.circular(100),
-                      ),
-                    ),
+          );
+  }
+
+  Widget dialogUI(MainViewModel mainViewModel, double width, Company company) {
+    return AnimatedContainer(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(35),
+        gradient: const LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Colors.black,
+            Color(0xFF020010),
+            Color.fromARGB(255, 0, 6, 166)
+          ],
+          stops: [0.9, 0.4, 0.8],
+        ),
+      ),
+      duration: const Duration(milliseconds: 500),
+      width: mainViewModel.dialogWidth,
+      height: mainViewModel.dialogHeight,
+      alignment: Alignment.center,
+      child: Container(
+        color: Colors.transparent,
+        child: Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            Container(
+              width: width - 100,
+              height: 120,
+              decoration: const BoxDecoration(
+                color: Color.fromARGB(255, 2, 4, 89),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(100),
+                  topRight: Radius.circular(100),
+                ),
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(bottom: 0),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                  child: SizedBox(
+                    width: width,
+                    height: 150,
                   ),
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 0),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                        child: SizedBox(
-                          width: width,
-                          height: 150,
-                        ),
-                      ),
+                ),
+              ),
+            ),
+            mainViewModel.showDialogScreen
+                ? BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                    child: const SizedBox(
+                      width: 0,
+                      height: 0,
                     ),
-                  ),
-                  mainViewModel.showDialogScreen
-                      ? BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-                          child: const SizedBox(
-                            width: 0,
-                            height: 0,
-                          ),
-                        )
-                      : Container(),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                  )
+                : Container(),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(top: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                        margin: const EdgeInsets.only(top: 20),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              margin: const EdgeInsets.only(right: 7),
-                              child: const Icon(
-                                Icons.paypal,
-                                color: Colors.white,
-                              ),
-                            ),
-                            Text(
-                              mainViewModel.currentItemPostion.toString(),
-                              style: const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white),
-                            ),
-                          ],
+                        margin: const EdgeInsets.only(right: 7),
+                        child: const Icon(
+                          Icons.paypal,
+                          color: Colors.white,
                         ),
                       ),
-                      Container(
-                        margin: const EdgeInsets.only(top: 30),
-                        child: Text(
-                          selectedUnBenefitedCompany.price.toString(),
-                          style: const TextStyle(
-                              fontSize: 28, color: Colors.white),
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(top: 8),
-                        child: Text(
-                          selectedUnBenefitedCompany.hasBenefit
-                              ? "+${selectedUnBenefitedCompany.changePercent}%"
-                              : "-${selectedUnBenefitedCompany.changePercent}%",
-                          style: TextStyle(
+                      Text(
+                        mainViewModel.currentItemPostion.toString(),
+                        style: const TextStyle(
                             fontSize: 20,
-                            color: selectedUnBenefitedCompany.hasBenefit
-                                ? Colors.green.withOpacity(0.7)
-                                : Colors.red.withOpacity(0.7),
-                          ),
-                        ),
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white),
                       ),
-                      Container(
-                        margin: const EdgeInsets.only(
-                            top: 35, bottom: 10, left: 15, right: 15),
-                        child: SfSparkLineChart(
-                          axisLineColor: Colors.transparent,
-                          data: selectedUnBenefitedCompany
-                              .chardData[mainViewModel.selectedItem].data,
-                          trackball: const SparkChartTrackball(
-                              color: Colors.white,
-                              activationMode: SparkChartActivationMode.tap),
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(left: 16),
-                        child: Row(
-                          children: const [
-                            Text(
-                              "12:30",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 15),
-                            ),
-                            SizedBox(
-                              width: 55,
-                            ),
-                            Text(
-                              "13:30",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 15),
-                            ),
-                            SizedBox(
-                              width: 55,
-                            ),
-                            Text(
-                              "14:30",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 15),
-                            ),
-                            SizedBox(
-                              width: 55,
-                            ),
-                            Text(
-                              "15:30",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 15),
-                            ),
-                          ],
-                        ),
-                      ),
-                      mainViewModel.showDialogMonth
-                          ? Container(
-                              margin: const EdgeInsets.only(top: 30),
-                              height: 30,
-                              child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount: timeList.length,
-                                itemBuilder: (context, index) {
-                                  String title = timeList[index];
-                                  return AnimatedContainer(
-                                    duration: const Duration(seconds: 1),
-                                    decoration: BoxDecoration(
-                                      color: mainViewModel.selectedItem == index
-                                          ? Colors.white
-                                          : const Color(0xFF080720),
-                                      borderRadius: BorderRadius.circular(100),
-                                    ),
-                                    margin: const EdgeInsets.only(
-                                        right: 5, left: 20),
-                                    child: InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          mainViewModel.selectedItem = index;
-                                        });
-                                      },
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 10),
-                                        child: Center(
-                                          child: Text(
-                                            title,
-                                            style: TextStyle(
-                                              color:
-                                                  mainViewModel.selectedItem ==
-                                                          index
-                                                      ? Colors.black
-                                                      : const Color(0xFF504d72),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            )
-                          : Container()
                     ],
                   ),
-                ],
-              ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 30),
+                  child: Text(
+                    company.price.toString(),
+                    style: const TextStyle(fontSize: 28, color: Colors.white),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 8),
+                  child: Text(
+                    company.hasBenefit
+                        ? "+${company.changePercent}%"
+                        : "-${company.changePercent}%",
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: company.hasBenefit
+                          ? Colors.green.withOpacity(0.7)
+                          : Colors.red.withOpacity(0.7),
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(
+                      top: 35, bottom: 10, left: 15, right: 15),
+                  child: SfSparkLineChart(
+                    axisLineColor: Colors.transparent,
+                    data: company.chardData[mainViewModel.selectedItem].data,
+                    trackball: const SparkChartTrackball(
+                        color: Colors.white,
+                        activationMode: SparkChartActivationMode.tap),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(left: 16),
+                  child: Row(
+                    children: const [
+                      Text(
+                        "12:30",
+                        style: TextStyle(color: Colors.white, fontSize: 15),
+                      ),
+                      SizedBox(
+                        width: 55,
+                      ),
+                      Text(
+                        "13:30",
+                        style: TextStyle(color: Colors.white, fontSize: 15),
+                      ),
+                      SizedBox(
+                        width: 55,
+                      ),
+                      Text(
+                        "14:30",
+                        style: TextStyle(color: Colors.white, fontSize: 15),
+                      ),
+                      SizedBox(
+                        width: 55,
+                      ),
+                      Text(
+                        "15:30",
+                        style: TextStyle(color: Colors.white, fontSize: 15),
+                      ),
+                    ],
+                  ),
+                ),
+                mainViewModel.showDialogMonth
+                    ? Container(
+                        margin: const EdgeInsets.only(top: 30),
+                        height: 30,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: mainViewModel.timeList.length,
+                          itemBuilder: (context, index) {
+                            String title = mainViewModel.timeList[index];
+                            return AnimatedContainer(
+                              duration: const Duration(seconds: 1),
+                              decoration: BoxDecoration(
+                                color: mainViewModel.selectedItem == index
+                                    ? Colors.white
+                                    : const Color(0xFF080720),
+                                borderRadius: BorderRadius.circular(100),
+                              ),
+                              margin: const EdgeInsets.only(right: 5, left: 20),
+                              child: InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    mainViewModel.selectedItem = index;
+                                  });
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
+                                  child: Center(
+                                    child: Text(
+                                      title,
+                                      style: TextStyle(
+                                        color:
+                                            mainViewModel.selectedItem == index
+                                                ? Colors.black
+                                                : const Color(0xFF504d72),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      )
+                    : Container()
+              ],
             ),
-          ),
+          ],
         ),
       ),
     );
