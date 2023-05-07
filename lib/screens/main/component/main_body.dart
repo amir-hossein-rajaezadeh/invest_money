@@ -293,15 +293,10 @@ class _MainBodyState extends ConsumerState<MainBody>
                   height: 80,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(100),
-                    gradient: const LinearGradient(
-                      begin: Alignment.topRight,
-                      end: Alignment.topLeft,
-                      colors: [
-                        Color(0xFF3fdcd6),
-                        Color(0xFF48eace),
-                        Color(0xFF90e6cf)
-                      ],
-                    ),
+                    gradient: LinearGradient(
+                        begin: Alignment.topRight,
+                        end: Alignment.topLeft,
+                        colors: mainViewModel.benefitColorList),
                   ),
                 ),
               ),
@@ -328,16 +323,10 @@ class _MainBodyState extends ConsumerState<MainBody>
                   height: 80,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(100),
-                    gradient: const LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        Color(0xFF5810df),
-                        Color(0xFF4f0cdc),
-                        Color(0xFF3d06db),
-                        Color(0xFF0e07ca)
-                      ],
-                    ),
+                    gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: mainViewModel.unBenefitColorList),
                   ),
                 ),
               )
@@ -352,7 +341,6 @@ class _MainBodyState extends ConsumerState<MainBody>
         : listViewIndex == 1
             ? companyList.where((e) => e.hasBenefit).toList()[index]
             : companyList.where((e) => !e.hasBenefit).toList()[index];
-    mainViewModel.setFirstAndLastItemColor(listViewIndex);
     return company.name != ""
         ? ScaleTransition(
             scale: mainViewModel.selectedCompanyIndex == index &&
@@ -461,9 +449,11 @@ class _MainBodyState extends ConsumerState<MainBody>
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(100),
                   gradient: LinearGradient(
-                      begin: Alignment.topRight,
-                      end: Alignment.topLeft,
-                      colors: mainViewModel.firstAndLastColoredItem),
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: listViewIndex == 1
+                          ? mainViewModel.benefitColorList
+                          : mainViewModel.unBenefitColorList),
                 ),
                 child: Row(
                   children: const [],
@@ -705,19 +695,5 @@ class _MainBodyState extends ConsumerState<MainBody>
         ),
       ),
     );
-  }
-
-  void onLongerPress(MainViewModel mainViewModel) {
-    print('onLongerPress called');
-    // setState(() {
-    // mainViewModel.showDialogScreen = true;
-    // if (mainViewModel.dialogWidth != 0) {
-    // dialogWidth = 0;
-    // dialogHeight = 0;
-    // } else {
-    // dialogWidth = 350;
-    // dialogHeight = 420;
-    // }
-    // });
   }
 }

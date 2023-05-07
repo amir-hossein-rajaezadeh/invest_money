@@ -26,7 +26,6 @@ class MainViewModel extends BaseViewModel {
   late Animation<Offset> rightToLeftListviewAnim;
   late AnimationController rightToLeftListviewController;
   late AnimationController boxesController;
-  List<Color> firstAndLastColoredItem = [];
   int dialogMode = 0;
   int showDialogScreenMode = -1;
   var selectedCompanyIndex = 0;
@@ -43,14 +42,17 @@ class MainViewModel extends BaseViewModel {
   late double height = 0;
   List<String> timeList = ["1D", "1W", "1M", "6M", "1Y"];
   int selectedListView = -1;
-  void setFirstAndLastItemColor(int listViewIndex) {
-    firstAndLastColoredItem = [
-      listViewIndex == 1 ? const Color(0xFF3fdcd6) : const Color(0xFF5810df),
-      listViewIndex == 1 ? const Color(0xFF48eace) : const Color(0xFF4f0cdc),
-      listViewIndex == 1 ? const Color(0xFF90e6cf) : const Color(0xFF0e07ca)
-    ];
-    notifyListeners();
-  }
+
+  List<Color> benefitColorList = [
+    const Color(0xFF3fdcd6),
+    const Color(0xFF48eace),
+    const Color(0xFF90e6cf)
+  ];
+  List<Color> unBenefitColorList = [
+    const Color(0xFF5810df),
+    const Color(0xFF4f0cdc),
+    const Color(0xFF0e07ca)
+  ];
 
   void setListViewItemClicked(
       bool pointerDown, int index, int listViewIndex, Offset localPosition) {
@@ -77,7 +79,7 @@ class MainViewModel extends BaseViewModel {
             ..reset()
             ..forward();
           await Future.delayed(
-            const Duration(milliseconds: 1500),
+            const Duration(milliseconds: 200),
           );
           showDialogScreenMode = 0;
         },
@@ -91,8 +93,8 @@ class MainViewModel extends BaseViewModel {
   }
 
   void setInitStateAnim(TickerProvider provider) {
-    firstScrollController = ScrollController(initialScrollOffset: 140.0);
-    secondScrollController = ScrollController(initialScrollOffset: 140.0);
+    firstScrollController = ScrollController(initialScrollOffset: 123.0);
+    secondScrollController = ScrollController(initialScrollOffset: 180.0);
     dialogController = AnimationController(
       duration: const Duration(milliseconds: 1100),
       vsync: provider,
