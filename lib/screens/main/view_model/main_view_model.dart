@@ -28,7 +28,7 @@ class MainViewModel extends BaseViewModel {
   late AnimationController boxesController;
   List<Color> firstAndLastColoredItem = [];
   int dialogMode = 0;
-  bool showDialogScreen = false;
+  int showDialogScreenMode = -1;
   var selectedCompanyIndex = 0;
   bool showListView = false;
   int selectedItem = 0;
@@ -42,7 +42,7 @@ class MainViewModel extends BaseViewModel {
   Offset currentItemPostion = const Offset(0, 0);
   late double height = 0;
   List<String> timeList = ["1D", "1W", "1M", "6M", "1Y"];
-
+  int selectedListView = -1;
   void setFirstAndLastItemColor(int listViewIndex) {
     firstAndLastColoredItem = [
       listViewIndex == 1 ? const Color(0xFF3fdcd6) : const Color(0xFF5810df),
@@ -55,40 +55,36 @@ class MainViewModel extends BaseViewModel {
   void setListViewItemClicked(
       bool pointerDown, int index, int listViewIndex, Offset localPosition) {
     if (pointerDown) {
-      timer = Timer(
-        const Duration(milliseconds: 1000),
-        () async {
-          dialogController.forward();
-          dialogScaleController.forward();
-          await Future.delayed(
-            const Duration(milliseconds: 1200),
-          );
-          showDialogScreen = true;
-          notifyListeners();
-        },
-        // onLongerPress
-      );
+      showDialogScreenMode = -1;
 
-      currentItemPostion = localPosition;
-      dialogMode = listViewIndex;
-      selectedCompanyMode = listViewIndex;
-      controller.forward();
-      // color = Colors.white;
-      selectedCompanyIndex = index;
-
+      selectedListView = listViewIndex;
       dialogAnim = Tween(
         begin: const Offset(0, 1),
         end: const Offset(0, 0),
       ).animate(CurvedAnimation(
           parent: dialogController, curve: Curves.fastOutSlowIn));
+      selectedCompanyIndex = index;
+      controller.forward();
+      timer = Timer(
+        const Duration(milliseconds: 1000),
+        () async {
+          showDialogScreenMode = 1;
+          notifyListeners();
+          dialogScaleController
+            ..reset()
+            ..forward();
+          dialogController
+            ..reset()
+            ..forward();
+          await Future.delayed(
+            const Duration(milliseconds: 1500),
+          );
+          showDialogScreenMode = 0;
+        },
+      );
     } else {
-      // dialogScaleController.reverse();
-      // dialogController.reverse();
-
       timer.cancel();
       controller.reverse();
-
-      // color = Colors.white.withOpacity(0.7);
     }
 
     notifyListeners();
@@ -102,7 +98,7 @@ class MainViewModel extends BaseViewModel {
       vsync: provider,
     );
     controller = AnimationController(
-      duration: const Duration(milliseconds: 180),
+      duration: const Duration(milliseconds: 300),
       vsync: provider,
     );
 

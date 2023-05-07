@@ -355,7 +355,8 @@ class _MainBodyState extends ConsumerState<MainBody>
     mainViewModel.setFirstAndLastItemColor(listViewIndex);
     return company.name != ""
         ? ScaleTransition(
-            scale: mainViewModel.selectedCompanyIndex == index
+            scale: mainViewModel.selectedCompanyIndex == index &&
+                    listViewIndex == mainViewModel.selectedListView
                 ? mainViewModel.animation
                 : mainViewModel.defaultAnimation,
             child: Center(
@@ -477,26 +478,33 @@ class _MainBodyState extends ConsumerState<MainBody>
             .where((e) =>
                 mainViewModel.dialogMode == 1 ? e.hasBenefit : !e.hasBenefit)
             .toList()[mainViewModel.selectedCompanyIndex];
-    return mainViewModel.showDialogScreen
+    return mainViewModel.showDialogScreenMode == 0
         ? Dismissible(
+            onDismissed: (direction) {
+              setState(() {
+                mainViewModel.showDialogScreenMode = -1;
+              });
+            },
             key: UniqueKey(),
             child: dialogUI(mainViewModel, width, company),
           )
-        : SlideTransition(
-            position: mainViewModel.dialogAnim,
-            child: ScaleTransition(
-              scale: mainViewModel.dialogScaleController,
-              child: GestureDetector(
-                onLongPress: () {
-                  setState(() {
-                    mainViewModel.showDialogMonth = true;
-                    mainViewModel.dialogHeight = 480;
-                  });
-                },
-                child: dialogUI(mainViewModel, width, company),
-              ),
-            ),
-          );
+        : mainViewModel.showDialogScreenMode == 1
+            ? SlideTransition(
+                position: mainViewModel.dialogAnim,
+                child: ScaleTransition(
+                  scale: mainViewModel.dialogScaleController,
+                  child: GestureDetector(
+                    onLongPress: () {
+                      setState(() {
+                        mainViewModel.showDialogMonth = true;
+                        mainViewModel.dialogHeight = 480;
+                      });
+                    },
+                    child: dialogUI(mainViewModel, width, company),
+                  ),
+                ),
+              )
+            : Container();
   }
 
   Widget dialogUI(MainViewModel mainViewModel, double width, Company company) {
@@ -548,15 +556,15 @@ class _MainBodyState extends ConsumerState<MainBody>
                 ),
               ),
             ),
-            mainViewModel.showDialogScreen
-                ? BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-                    child: const SizedBox(
-                      width: 0,
-                      height: 0,
-                    ),
-                  )
-                : Container(),
+            // mainViewModel.showDialogScreenMode
+            //     ? BackdropFilter(
+            //         filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+            //         child: const SizedBox(
+            //           width: 0,
+            //           height: 0,
+            //         ),
+            //       )
+            //     : Container(),
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
