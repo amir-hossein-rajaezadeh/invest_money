@@ -3,7 +3,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:invest_money/screens/main/view_model/main_view_model.dart';
-import 'package:syncfusion_flutter_charts/sparkcharts.dart';
+// import 'package:syncfusion_flutter_charts/sparkcharts.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 import '../../../data/company.dart';
 
@@ -29,7 +30,11 @@ class _MainBodyState extends ConsumerState<MainBody>
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final mainViewModel = ref.watch(mainViewModelProvider);
+
       mainViewModel.setInitStateAnim(this);
+      await Future.delayed(const Duration(milliseconds: 700));
+      mainViewModel.boxesController.forward();
+      print("test data ");
     });
 
     super.initState();
@@ -55,10 +60,35 @@ class _MainBodyState extends ConsumerState<MainBody>
     );
   }
 
+  LineTouchData get lineTouchData1 => LineTouchData(
+        handleBuiltInTouches: true,
+        touchTooltipData: LineTouchTooltipData(
+          tooltipBgColor: Colors.blueGrey.withOpacity(0.8),
+        ),
+      );
+
+  Widget bottomTitleWidgets(double value, TitleMeta meta) {
+    const style = TextStyle(
+      fontWeight: FontWeight.bold,
+      fontSize: 16,
+    );
+    Widget text;
+
+    text = const Text('');
+
+    return SideTitleWidget(
+      axisSide: meta.axisSide,
+      space: 10,
+      child: text,
+    );
+  }
+
+  FlGridData get gridData => FlGridData(show: false);
+
   Widget firstWidget(double height) {
     return AnimatedContainer(
       height: height,
-      duration: const Duration(milliseconds: 1500),
+      duration: const Duration(milliseconds: 800),
       margin: const EdgeInsets.only(right: 3, left: 3),
       decoration: const BoxDecoration(
           borderRadius: BorderRadius.only(
@@ -470,11 +500,8 @@ class _MainBodyState extends ConsumerState<MainBody>
             .toList()[mainViewModel.selectedCompanyIndex];
     return mainViewModel.showDialogScreenMode == 0
         ? Dismissible(
-            onDismissed: (direction) {
-              setState(() {
-                mainViewModel.showDialogScreenMode = -1;
-              });
-            },
+            direction: DismissDirection.vertical,
+            onDismissed: (direction) => mainViewModel.dialogOnDismissedFun(),
             key: UniqueKey(),
             child: dialogUI(mainViewModel, width, company),
           )
@@ -483,215 +510,238 @@ class _MainBodyState extends ConsumerState<MainBody>
                 position: mainViewModel.dialogAnim,
                 child: ScaleTransition(
                   scale: mainViewModel.dialogScaleController,
-                  child: GestureDetector(
-                    onLongPress: () {
-                      setState(() {
-                        mainViewModel.showDialogMonth = true;
-                        mainViewModel.dialogHeight = 480;
-                      });
-                    },
-                    child: dialogUI(mainViewModel, width, company),
-                  ),
+                  child: dialogUI(mainViewModel, width, company),
                 ),
               )
             : Container();
   }
 
   Widget dialogUI(MainViewModel mainViewModel, double width, Company company) {
-    return AnimatedContainer(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(35),
-        gradient: const LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Colors.black,
-            Color(0xFF020010),
-            Color.fromARGB(255, 0, 6, 166)
-          ],
-          stops: [0.9, 0.4, 0.8],
-        ),
-      ),
-      duration: const Duration(milliseconds: 500),
-      width: mainViewModel.dialogWidth,
-      height: mainViewModel.dialogHeight,
-      alignment: Alignment.center,
+    return GestureDetector(
+      onLongPress: () => mainViewModel.dialogOnLongPress(),
       child: Container(
         color: Colors.transparent,
-        child: Stack(
-          alignment: Alignment.bottomCenter,
-          children: [
-            Container(
-              width: width - 100,
-              height: 120,
-              decoration: const BoxDecoration(
-                color: Color.fromARGB(255, 2, 4, 89),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(100),
-                  topRight: Radius.circular(100),
-                ),
-              ),
+        child: AnimatedContainer(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(35),
+            gradient: const LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Colors.black, Color.fromARGB(255, 0, 6, 166)],
+              stops: [0.8, 1],
             ),
-            Container(
-              margin: const EdgeInsets.only(bottom: 0),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                  child: SizedBox(
-                    width: width,
-                    height: 150,
-                  ),
-                ),
-              ),
-            ),
-            // mainViewModel.showDialogScreenMode
-            //     ? BackdropFilter(
-            //         filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-            //         child: const SizedBox(
-            //           width: 0,
-            //           height: 0,
-            //         ),
-            //       )
-            //     : Container(),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
+          ),
+          duration: const Duration(milliseconds: 500),
+          width: mainViewModel.dialogWidth,
+          height: mainViewModel.dialogHeight,
+          alignment: Alignment.center,
+          child: Container(
+            color: Colors.transparent,
+            child: Stack(
+              alignment: Alignment.bottomCenter,
               children: [
-                Container(
-                  margin: const EdgeInsets.only(top: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.only(right: 7),
-                        child: const Icon(
-                          Icons.paypal,
-                          color: Colors.white,
+                mainViewModel.blurOutsideDialog
+                    ? BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                        child: const SizedBox(
+                          width: 350,
+                          height: 500,
                         ),
-                      ),
-                      Text(
-                        mainViewModel.currentItemPostion.toString(),
-                        style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.white),
-                      ),
-                    ],
-                  ),
-                ),
+                      )
+                    : Container(),
                 Container(
-                  margin: const EdgeInsets.only(top: 30),
-                  child: Text(
-                    company.price.toString(),
-                    style: const TextStyle(fontSize: 28, color: Colors.white),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(top: 8),
-                  child: Text(
-                    company.hasBenefit
-                        ? "+${company.changePercent}%"
-                        : "-${company.changePercent}%",
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: company.hasBenefit
-                          ? Colors.green.withOpacity(0.7)
-                          : Colors.red.withOpacity(0.7),
+                  width: width - 100,
+                  height: 120,
+                  decoration: const BoxDecoration(
+                    color: Color.fromARGB(255, 2, 4, 89),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(100),
+                      topRight: Radius.circular(100),
                     ),
                   ),
                 ),
-                Container(
-                  margin: const EdgeInsets.only(
-                      top: 35, bottom: 10, left: 15, right: 15),
-                  child: SfSparkLineChart(
-                    axisLineColor: Colors.transparent,
-                    data: company.chardData[mainViewModel.selectedItem].data,
-                    trackball: const SparkChartTrackball(
-                        color: Colors.white,
-                        activationMode: SparkChartActivationMode.tap),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                    child: SizedBox(
+                      width: width,
+                      height: 150,
+                    ),
                   ),
                 ),
-                Container(
-                  margin: const EdgeInsets.only(left: 16),
-                  child: Row(
-                    children: const [
-                      Text(
-                        "12:30",
-                        style: TextStyle(color: Colors.white, fontSize: 15),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(top: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(right: 7),
+                            child: const Icon(
+                              Icons.paypal,
+                              color: Colors.white,
+                            ),
+                          ),
+                          Text(
+                            company.name,
+                            style: const TextStyle(
+                                fontSize: 23,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white),
+                          ),
+                        ],
                       ),
-                      SizedBox(
-                        width: 55,
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(top: 30),
+                      child: Text(
+                        company.price.toString(),
+                        style:
+                            const TextStyle(fontSize: 28, color: Colors.white),
                       ),
-                      Text(
-                        "13:30",
-                        style: TextStyle(color: Colors.white, fontSize: 15),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(top: 8),
+                      child: Text(
+                        company.hasBenefit
+                            ? "+${company.changePercent}%"
+                            : "-${company.changePercent}%",
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: company.hasBenefit
+                              ? Colors.green.withOpacity(0.7)
+                              : Colors.red.withOpacity(0.7),
+                        ),
                       ),
-                      SizedBox(
-                        width: 55,
+                    ),
+                    Container(
+                        alignment: Alignment.topLeft,
+                        height: 180,
+                        margin: const EdgeInsets.only(
+                            top: 30, bottom: 10, left: 20, right: 20),
+                        child: LineChart(LineChartData(
+                          lineTouchData: lineTouchData1,
+                          gridData: gridData,
+                          titlesData: FlTitlesData(
+                            topTitles: AxisTitles(
+                              sideTitles: SideTitles(showTitles: false),
+                            ),
+                            bottomTitles: AxisTitles(
+                              sideTitles: SideTitles(showTitles: false),
+                            ),
+                            rightTitles: AxisTitles(
+                              sideTitles: SideTitles(showTitles: false),
+                            ),
+                            leftTitles: AxisTitles(
+                              sideTitles: SideTitles(showTitles: false),
+                            ),
+                          ),
+                          borderData: FlBorderData(show: false),
+                          lineBarsData: <LineChartBarData>[
+                            LineChartBarData(
+                                isCurved: true,
+                                color: Colors.green,
+                                barWidth: 4,
+                                isStrokeCapRound: true,
+                                dotData: FlDotData(show: false),
+                                belowBarData: BarAreaData(show: false),
+                                spots:
+                                    mainViewModel.addChartDataValueToFlSpot())
+                          ],
+                        ))
+                        // SfSparkLineChart(
+                        //   axisLineColor: Colors.transparent,
+                        //   data:
+                        //       company.chardData[mainViewModel.selectedItem].data,
+                        //   trackball: const SparkChartTrackball(
+                        //       color: Colors.white,
+                        //       activationMode: SparkChartActivationMode.tap),
+                        // ),
+                        ),
+                    Container(
+                      margin: const EdgeInsets.only(left: 16, top: 15),
+                      child: Row(
+                        children: const [
+                          Text(
+                            "12:30",
+                            style: TextStyle(color: Colors.white, fontSize: 15),
+                          ),
+                          SizedBox(
+                            width: 55,
+                          ),
+                          Text(
+                            "13:30",
+                            style: TextStyle(color: Colors.white, fontSize: 15),
+                          ),
+                          SizedBox(
+                            width: 55,
+                          ),
+                          Text(
+                            "14:30",
+                            style: TextStyle(color: Colors.white, fontSize: 15),
+                          ),
+                          SizedBox(
+                            width: 55,
+                          ),
+                          Text(
+                            "15:30",
+                            style: TextStyle(color: Colors.white, fontSize: 15),
+                          ),
+                        ],
                       ),
-                      Text(
-                        "14:30",
-                        style: TextStyle(color: Colors.white, fontSize: 15),
-                      ),
-                      SizedBox(
-                        width: 55,
-                      ),
-                      Text(
-                        "15:30",
-                        style: TextStyle(color: Colors.white, fontSize: 15),
-                      ),
-                    ],
-                  ),
-                ),
-                mainViewModel.showDialogMonth
-                    ? Container(
-                        margin: const EdgeInsets.only(top: 30),
-                        height: 30,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: mainViewModel.timeList.length,
-                          itemBuilder: (context, index) {
-                            String title = mainViewModel.timeList[index];
-                            return AnimatedContainer(
-                              duration: const Duration(seconds: 1),
-                              decoration: BoxDecoration(
-                                color: mainViewModel.selectedItem == index
-                                    ? Colors.white
-                                    : const Color(0xFF080720),
-                                borderRadius: BorderRadius.circular(100),
-                              ),
-                              margin: const EdgeInsets.only(right: 5, left: 20),
-                              child: InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    mainViewModel.selectedItem = index;
-                                  });
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10),
-                                  child: Center(
-                                    child: Text(
-                                      title,
-                                      style: TextStyle(
-                                        color:
-                                            mainViewModel.selectedItem == index
+                    ),
+                    mainViewModel.showDialogMonth
+                        ? Container(
+                            margin: const EdgeInsets.only(top: 20),
+                            height: 30,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: mainViewModel.timeList.length,
+                              itemBuilder: (context, index) {
+                                String title = mainViewModel.timeList[index];
+                                return AnimatedContainer(
+                                  duration: const Duration(seconds: 1),
+                                  decoration: BoxDecoration(
+                                    color: mainViewModel.selectedItem == index
+                                        ? Colors.white
+                                        : const Color(0xFF080720),
+                                    borderRadius: BorderRadius.circular(100),
+                                  ),
+                                  margin:
+                                      const EdgeInsets.only(right: 5, left: 20),
+                                  child: InkWell(
+                                    onTap: () => mainViewModel
+                                        .setDialogSelectedTime(index),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10),
+                                      child: Center(
+                                        child: Text(
+                                          title,
+                                          style: TextStyle(
+                                            color: mainViewModel.selectedItem ==
+                                                    index
                                                 ? Colors.black
                                                 : const Color(0xFF504d72),
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      )
-                    : Container()
+                                );
+                              },
+                            ),
+                          )
+                        : Container()
+                  ],
+                ),
               ],
             ),
-          ],
+          ),
         ),
       ),
     );

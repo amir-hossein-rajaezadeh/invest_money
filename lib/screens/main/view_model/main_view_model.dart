@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:invest_money/data/company.dart';
 
 import '../../../data/base_view_model.dart';
 
@@ -42,7 +44,7 @@ class MainViewModel extends BaseViewModel {
   late double height = 0;
   List<String> timeList = ["1D", "1W", "1M", "6M", "1Y"];
   int selectedListView = -1;
-
+  bool blurOutsideDialog = false;
   List<Color> benefitColorList = [
     const Color(0xFF3fdcd6),
     const Color(0xFF48eace),
@@ -78,6 +80,7 @@ class MainViewModel extends BaseViewModel {
           dialogController
             ..reset()
             ..forward();
+          blurOutsideDialog = true;
           await Future.delayed(
             const Duration(milliseconds: 200),
           );
@@ -88,7 +91,26 @@ class MainViewModel extends BaseViewModel {
       timer.cancel();
       controller.reverse();
     }
+    notifyListeners();
+  }
 
+  void dialogOnLongPress() {
+    dialogHeight = 460;
+    showDialogMonth = true;
+    notifyListeners();
+  }
+
+  void setDialogSelectedTime(int index) {
+    selectedItem = index;
+    notifyListeners();
+  }
+
+  void dialogOnDismissedFun() {
+    showDialogScreenMode = -1;
+    blurOutsideDialog = false;
+    selectedItem = 0;
+    dialogHeight = 420;
+    showDialogMonth = false;
     notifyListeners();
   }
 
@@ -100,7 +122,7 @@ class MainViewModel extends BaseViewModel {
       vsync: provider,
     );
     controller = AnimationController(
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 100),
       vsync: provider,
     );
 
@@ -113,16 +135,16 @@ class MainViewModel extends BaseViewModel {
     defaultAnimation = Tween(begin: 1.0, end: 1.0).animate(controller);
     firstRightToLeftAnimController = AnimationController(
       vsync: provider,
-      duration: const Duration(milliseconds: 1000),
+      duration: const Duration(milliseconds: 800),
     );
 
     boxesController = AnimationController(
       vsync: provider,
-      duration: const Duration(milliseconds: 1300),
+      duration: const Duration(milliseconds: 800),
     );
     rightToLeftListviewController = AnimationController(
       vsync: provider,
-      duration: const Duration(milliseconds: 1000),
+      duration: const Duration(milliseconds: 700),
     );
     firstRightToLeftAnim = Tween(
       begin: const Offset(2, 0),
@@ -158,10 +180,7 @@ class MainViewModel extends BaseViewModel {
 
     Future.delayed(const Duration(milliseconds: 100)).then((value) async {
       height = 300;
-      await Future.delayed(
-        const Duration(milliseconds: 700),
-      );
-      boxesController.forward();
+
       notifyListeners();
     });
 
@@ -184,6 +203,19 @@ class MainViewModel extends BaseViewModel {
     });
 
     notifyListeners();
+  }
+
+  List<FlSpot> addChartDataValueToFlSpot() {
+    List<FlSpot> flSpot = [];
+
+    for (var element
+        in companyList[selectedCompanyIndex].chardData[selectedItem].data) {
+      flSpot.add(
+        FlSpot(element.x, element.y),
+      );
+    }
+
+    return flSpot;
   }
 }
 
