@@ -40,16 +40,7 @@ const companyList = [
       changePercent: 0,
       hasBenefit: true,
       companyLogo: "",
-      chardData: [
-        ChartData(
-          data: [
-            ChartDataItem(x: 1, y: 1),
-            ChartDataItem(x: 2, y: 4),
-            ChartDataItem(x: 3, y: 15),
-            ChartDataItem(x: 4, y: 10)
-          ],
-        ),
-      ]),
+      chardData: []),
   Company(
     name: "Google",
     price: 100.27,
@@ -119,7 +110,31 @@ const companyList = [
           ChartDataItem(x: 1, y: 1),
           ChartDataItem(x: 2, y: 4),
           ChartDataItem(x: 3, y: 15),
+          ChartDataItem(x: 4, y: 7)
+        ],
+      ),
+      ChartData(
+        data: [
+          ChartDataItem(x: 1, y: 9),
+          ChartDataItem(x: 2, y: 2),
+          ChartDataItem(x: 3, y: 15),
+          ChartDataItem(x: 4, y: 20)
+        ],
+      ),
+      ChartData(
+        data: [
+          ChartDataItem(x: 1, y: 6),
+          ChartDataItem(x: 2, y: 5),
+          ChartDataItem(x: 3, y: 2),
           ChartDataItem(x: 4, y: 10)
+        ],
+      ),
+      ChartData(
+        data: [
+          ChartDataItem(x: 1, y: 5),
+          ChartDataItem(x: 2, y: 10),
+          ChartDataItem(x: 3, y: 15),
+          ChartDataItem(x: 4, y: 20)
         ],
       ),
     ],
@@ -133,10 +148,10 @@ const companyList = [
       chardData: [
         ChartData(
           data: [
-            ChartDataItem(x: 1, y: 1),
-            ChartDataItem(x: 2, y: 4),
-            ChartDataItem(x: 3, y: 15),
-            ChartDataItem(x: 4, y: 10)
+            ChartDataItem(x: 1, y: 5),
+            ChartDataItem(x: 2, y: 10),
+            ChartDataItem(x: 3, y: 7),
+            ChartDataItem(x: 4, y: 12)
           ],
         ),
         ChartData(
@@ -149,8 +164,24 @@ const companyList = [
         ),
         ChartData(
           data: [
-            ChartDataItem(x: 1, y: 1),
-            ChartDataItem(x: 2, y: 4),
+            ChartDataItem(x: 1, y: 5),
+            ChartDataItem(x: 2, y: 9),
+            ChartDataItem(x: 3, y: 2),
+            ChartDataItem(x: 4, y: 5)
+          ],
+        ),
+        ChartData(
+          data: [
+            ChartDataItem(x: 1, y: 15),
+            ChartDataItem(x: 2, y: 14),
+            ChartDataItem(x: 3, y: 15),
+            ChartDataItem(x: 4, y: 10)
+          ],
+        ),
+        ChartData(
+          data: [
+            ChartDataItem(x: 1, y: 10),
+            ChartDataItem(x: 2, y: 19),
             ChartDataItem(x: 3, y: 15),
             ChartDataItem(x: 4, y: 10)
           ],
@@ -165,26 +196,42 @@ const companyList = [
       chardData: [
         ChartData(
           data: [
-            ChartDataItem(x: 1, y: 1),
+            ChartDataItem(x: 1, y: 8),
             ChartDataItem(x: 2, y: 4),
             ChartDataItem(x: 3, y: 15),
-            ChartDataItem(x: 4, y: 10)
+            ChartDataItem(x: 4, y: 20)
           ],
         ),
         ChartData(
           data: [
-            ChartDataItem(x: 1, y: 1),
-            ChartDataItem(x: 2, y: 4),
-            ChartDataItem(x: 3, y: 15),
-            ChartDataItem(x: 4, y: 10)
+            ChartDataItem(x: 1, y: 19),
+            ChartDataItem(x: 2, y: 8),
+            ChartDataItem(x: 3, y: 20),
+            ChartDataItem(x: 4, y: 20)
           ],
         ),
         ChartData(
           data: [
-            ChartDataItem(x: 1, y: 1),
-            ChartDataItem(x: 2, y: 4),
+            ChartDataItem(x: 1, y: 18),
+            ChartDataItem(x: 2, y: 5),
             ChartDataItem(x: 3, y: 15),
-            ChartDataItem(x: 4, y: 10)
+            ChartDataItem(x: 4, y: 20)
+          ],
+        ),
+        ChartData(
+          data: [
+            ChartDataItem(x: 1, y: 15),
+            ChartDataItem(x: 2, y: 17),
+            ChartDataItem(x: 3, y: 5),
+            ChartDataItem(x: 4, y: 20)
+          ],
+        ),
+        ChartData(
+          data: [
+            ChartDataItem(x: 1, y: 10),
+            ChartDataItem(x: 2, y: 5),
+            ChartDataItem(x: 3, y: 15),
+            ChartDataItem(x: 4, y: 17)
           ],
         ),
       ]),
@@ -200,31 +247,39 @@ const companyList = [
             ChartDataItem(x: 1, y: 1),
             ChartDataItem(x: 2, y: 4),
             ChartDataItem(x: 3, y: 15),
+            ChartDataItem(x: 4, y: 20)
+          ],
+        ),
+        ChartData(
+          data: [
+            ChartDataItem(x: 1, y: 5),
+            ChartDataItem(x: 2, y: 10),
+            ChartDataItem(x: 3, y: 20),
+            ChartDataItem(x: 4, y: 8)
+          ],
+        ),
+        ChartData(
+          data: [
+            ChartDataItem(x: 1, y: 8),
+            ChartDataItem(x: 2, y: 5),
+            ChartDataItem(x: 3, y: 2),
             ChartDataItem(x: 4, y: 10)
           ],
         ),
         ChartData(
           data: [
             ChartDataItem(x: 1, y: 1),
-            ChartDataItem(x: 2, y: 4),
+            ChartDataItem(x: 2, y: 2),
             ChartDataItem(x: 3, y: 15),
-            ChartDataItem(x: 4, y: 10)
+            ChartDataItem(x: 4, y: 20)
           ],
         ),
         ChartData(
           data: [
-            ChartDataItem(x: 1, y: 1),
-            ChartDataItem(x: 2, y: 4),
+            ChartDataItem(x: 1, y: 5),
+            ChartDataItem(x: 2, y: 8),
             ChartDataItem(x: 3, y: 15),
-            ChartDataItem(x: 4, y: 10)
-          ],
-        ),
-        ChartData(
-          data: [
-            ChartDataItem(x: 1, y: 1),
-            ChartDataItem(x: 2, y: 4),
-            ChartDataItem(x: 3, y: 15),
-            ChartDataItem(x: 4, y: 10)
+            ChartDataItem(x: 4, y: 7)
           ],
         ),
       ]),
@@ -234,22 +289,5 @@ const companyList = [
       changePercent: 0,
       hasBenefit: false,
       companyLogo: "",
-      chardData: [
-        ChartData(
-          data: [
-            ChartDataItem(x: 1, y: 1),
-            ChartDataItem(x: 2, y: 4),
-            ChartDataItem(x: 3, y: 15),
-            ChartDataItem(x: 4, y: 10)
-          ],
-        ),
-        ChartData(
-          data: [
-            ChartDataItem(x: 1, y: 1),
-            ChartDataItem(x: 2, y: 4),
-            ChartDataItem(x: 3, y: 15),
-            ChartDataItem(x: 4, y: 10)
-          ],
-        ),
-      ]),
+      chardData: []),
 ];

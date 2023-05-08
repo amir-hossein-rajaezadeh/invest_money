@@ -208,12 +208,42 @@ class MainViewModel extends BaseViewModel {
   List<FlSpot> addChartDataValueToFlSpot() {
     List<FlSpot> flSpot = [];
 
-    for (var element
-        in companyList[selectedCompanyIndex].chardData[selectedItem].data) {
-      flSpot.add(
-        FlSpot(element.x, element.y),
-      );
+    // if (selectedListView == 0) {
+    for (var element in selectedListView == 0
+        ? companyList[selectedCompanyIndex].chardData[selectedItem].data
+        : companyList
+            .where((element) => selectedListView == 1
+                ? element.hasBenefit
+                : !element.hasBenefit)
+            .toList()[selectedCompanyIndex]
+            .chardData[selectedItem]
+            .data) {
+      flSpot.add(FlSpot(element.x, element.y));
     }
+    // } else if (selectedListView == 1) {
+    //   for (var element in companyList
+    //       .where((element) => element.hasBenefit)
+    //       .toList()[selectedCompanyIndex]
+    //       .chardData[selectedCompanyIndex]
+    //       .data) {
+    //     flSpot.add(FlSpot(element.x, element.y));
+    //   }
+    // } else {
+    //   for (var element in companyList
+    //       .where((element) => !element.hasBenefit)
+    //       .toList()[selectedCompanyIndex]
+    //       .chardData[selectedCompanyIndex]
+    //       .data) {
+    //     flSpot.add(FlSpot(element.x, element.y));
+    //   }
+    // }
+    // for (var element in companyList[  selectedCompanyIndex]
+    //   .chardData[selectedItem]
+    //   .data) {
+    // flSpot.add(
+    //   FlSpot(element.x, element.y),
+    // );
+    // }
 
     return flSpot;
   }

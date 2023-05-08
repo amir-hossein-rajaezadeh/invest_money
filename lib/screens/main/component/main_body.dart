@@ -492,11 +492,12 @@ class _MainBodyState extends ConsumerState<MainBody>
   }
 
   Widget dismissableDilog(double width, MainViewModel mainViewModel) {
-    Company company = mainViewModel.dialogMode == 0
+    Company company = mainViewModel.selectedListView == 0
         ? companyList[mainViewModel.selectedCompanyIndex]
         : companyList
-            .where((e) =>
-                mainViewModel.dialogMode == 1 ? e.hasBenefit : !e.hasBenefit)
+            .where((e) => mainViewModel.selectedListView == 1
+                ? e.hasBenefit
+                : !e.hasBenefit)
             .toList()[mainViewModel.selectedCompanyIndex];
     return mainViewModel.showDialogScreenMode == 0
         ? Dismissible(
