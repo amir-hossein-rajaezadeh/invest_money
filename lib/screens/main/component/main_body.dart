@@ -30,7 +30,6 @@ class _MainBodyState extends ConsumerState<MainBody>
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final mainViewModel = ref.watch(mainViewModelProvider);
-
       mainViewModel.setInitStateAnim(this);
       await Future.delayed(const Duration(milliseconds: 700));
       mainViewModel.boxesController.forward();
@@ -45,146 +44,127 @@ class _MainBodyState extends ConsumerState<MainBody>
     double? height = MediaQuery.of(context).size.height;
     double? width = MediaQuery.of(context).size.width;
     final mainViewModel = ref.watch(mainViewModelProvider);
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        Column(
-          children: [
-            firstWidget(mainViewModel.height),
-            secondWidget(width, height, mainViewModel),
-            listViews(mainViewModel.showListView, mainViewModel),
-          ],
-        ),
-        dismissableDilog(width, mainViewModel),
-      ],
-    );
-  }
-
-  LineTouchData get lineTouchData1 => LineTouchData(
-        handleBuiltInTouches: true,
-        touchTooltipData: LineTouchTooltipData(
-          tooltipBgColor: Colors.blueGrey.withOpacity(0.8),
-        ),
-      );
-
-  Widget bottomTitleWidgets(double value, TitleMeta meta) {
-    const style = TextStyle(
-      fontWeight: FontWeight.bold,
-      fontSize: 16,
-    );
-    Widget text;
-
-    text = const Text('');
-
-    return SideTitleWidget(
-      axisSide: meta.axisSide,
-      space: 10,
-      child: text,
-    );
-  }
-
-  FlGridData get gridData => FlGridData(show: false);
-
-  Widget firstWidget(double height) {
-    return AnimatedContainer(
-      height: height,
-      duration: const Duration(milliseconds: 800),
-      margin: const EdgeInsets.only(right: 3, left: 3),
-      decoration: const BoxDecoration(
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(40),
-            bottomRight: Radius.circular(40),
-          ),
-          gradient: LinearGradient(
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
-            colors: [
-              Color(0xFF1edee4),
-              Color(0xFF1edee4),
-              Color(0xFF1799d7),
-              Color(0xFF1786db),
-              Color(0xFF051ed9),
-            ],
-          )),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return SingleChildScrollView(
+      child: Stack(
+        alignment: Alignment.center,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          Column(
             children: [
-              Container(
-                margin: const EdgeInsets.only(top: 23, left: 12),
-                child: Column(
-                  children: const [
-                    Text(
-                      "Hello, Amir!",
-                      style: TextStyle(
-                          fontSize: 30,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w400),
-                    ),
-                    SizedBox(
-                      height: 8,
-                    ),
-                    Text(
-                      "Let's invest together!",
-                      style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w200),
-                    )
-                  ],
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.only(right: 16, top: 12),
-                width: 60,
-                height: 60,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(100),
-                  child: Image.asset(
-                    "assets/images/user_prof.jpeg",
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              )
+              firstWidget(mainViewModel.height, mainViewModel),
+              secondWidget(width, height, mainViewModel),
+              listViews(mainViewModel.showListView, mainViewModel),
             ],
           ),
-          Container(
-            margin: const EdgeInsets.only(left: 20, bottom: 30),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          dismissableDilog(width, mainViewModel),
+        ],
+      ),
+    );
+  }
+
+  Widget firstWidget(double height, MainViewModel mainViewModel) {
+    return AnimatedContainer(
+        height: height,
+        duration: const Duration(milliseconds: 800),
+        margin: const EdgeInsets.only(right: 3, left: 3),
+        decoration: const BoxDecoration(
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(40),
+              bottomRight: Radius.circular(40),
+            ),
+            gradient: LinearGradient(
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+              colors: [
+                Color(0xFF1edee4),
+                Color(0xFF1edee4),
+                Color(0xFF1799d7),
+                Color(0xFF1786db),
+                Color(0xFF051ed9),
+              ],
+            )),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  "\$25 800",
-                  style: TextStyle(
-                      fontSize: 50,
-                      color: Colors.white.withOpacity(0.8),
-                      fontWeight: FontWeight.w400),
+                Container(
+                  margin: const EdgeInsets.only(top: 23, left: 12),
+                  child: Column(
+                    children: const [
+                      Text(
+                        "Hello, Amir!",
+                        style: TextStyle(
+                            fontSize: 30,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w400),
+                      ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      Text(
+                        "Let's invest together!",
+                        style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w200),
+                      )
+                    ],
+                  ),
                 ),
                 Container(
-                  margin: const EdgeInsets.only(top: 15),
-                  width: 80,
-                  height: 35,
-                  decoration: BoxDecoration(
+                  margin: const EdgeInsets.only(right: 16, top: 12),
+                  width: 60,
+                  height: 60,
+                  child: ClipRRect(
                     borderRadius: BorderRadius.circular(100),
-                    color: Colors.white.withOpacity(0.4),
-                  ),
-                  child: Center(
-                    child: Text(
-                      "+\$620",
-                      style: TextStyle(
-                          color: Colors.white.withOpacity(0.9), fontSize: 18),
+                    child: Image.asset(
+                      "assets/images/user_prof.jpeg",
+                      fit: BoxFit.cover,
                     ),
                   ),
                 )
               ],
             ),
-          )
-        ],
-      ),
-    );
+            Column(
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(left: 20, bottom: 30),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "\$25 800",
+                        style: TextStyle(
+                            fontSize: 50,
+                            color: Colors.white.withOpacity(0.8),
+                            fontWeight: FontWeight.w400),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(top: 15),
+                        width: 80,
+                        height: 35,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(100),
+                          color: Colors.white.withOpacity(0.4),
+                        ),
+                        child: Center(
+                          child: Text(
+                            "+\$620",
+                            style: TextStyle(
+                                color: Colors.white.withOpacity(0.9),
+                                fontSize: 18),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            )
+          ],
+        ));
   }
 
   Widget secondWidget(
@@ -375,8 +355,8 @@ class _MainBodyState extends ConsumerState<MainBody>
         ? ScaleTransition(
             scale: mainViewModel.selectedCompanyIndex == index &&
                     listViewIndex == mainViewModel.selectedListView
-                ? mainViewModel.animation
-                : mainViewModel.defaultAnimation,
+                ? mainViewModel.listViewItemScaleAnimation
+                : mainViewModel.listViewItemDefualtAnimation,
             child: Center(
               child: Container(
                 width: 215,
@@ -414,9 +394,12 @@ class _MainBodyState extends ConsumerState<MainBody>
                             duration: const Duration(milliseconds: 400),
                             child: Image.asset(
                               company.companyLogo,
-                              color: mainViewModel.selectedCompanyIndex == index
-                                  ? mainViewModel.color
-                                  : Colors.white.withOpacity(0.8),
+                              color:
+                                  mainViewModel.selectedCompanyIndex == index &&
+                                          listViewIndex ==
+                                              mainViewModel.selectedListView
+                                      ? mainViewModel.color
+                                      : Colors.white.withOpacity(0.5),
                             ),
                           )),
                         ),
@@ -625,8 +608,13 @@ class _MainBodyState extends ConsumerState<MainBody>
                         margin: const EdgeInsets.only(
                             top: 30, bottom: 10, left: 20, right: 20),
                         child: LineChart(LineChartData(
-                          lineTouchData: lineTouchData1,
-                          gridData: gridData,
+                          lineTouchData: LineTouchData(
+                            handleBuiltInTouches: true,
+                            touchTooltipData: LineTouchTooltipData(
+                              tooltipBgColor: Colors.blueGrey.withOpacity(0.8),
+                            ),
+                          ),
+                          gridData: FlGridData(show: false),
                           titlesData: FlTitlesData(
                             topTitles: AxisTitles(
                               sideTitles: SideTitles(showTitles: false),
@@ -645,7 +633,7 @@ class _MainBodyState extends ConsumerState<MainBody>
                           lineBarsData: <LineChartBarData>[
                             LineChartBarData(
                                 isCurved: true,
-                                color: Colors.green,
+                                color: const Color(0xFF968cb7),
                                 barWidth: 4,
                                 isStrokeCapRound: true,
                                 dotData: FlDotData(show: false),

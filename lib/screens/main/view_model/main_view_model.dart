@@ -11,12 +11,12 @@ class MainViewModel extends BaseViewModel {
   late Timer timer;
   late ScrollController firstScrollController;
   late ScrollController secondScrollController;
-  late AnimationController controller;
+  late AnimationController listViewItemController;
   late AnimationController dialogController;
   late AnimationController dialogScaleController;
-
-  late Animation<double> animation;
-  late Animation<double> defaultAnimation;
+  bool shouldBeVisible = false;
+  late Animation<double> listViewItemScaleAnimation;
+  late Animation<double> listViewItemDefualtAnimation;
 
   late Animation<Offset> firstRightToLeftAnim;
   late Animation<Offset> dialogAnim;
@@ -35,9 +35,7 @@ class MainViewModel extends BaseViewModel {
   int selectedItem = 0;
   double dialogWidth = 350;
   double dialogHeight = 420;
-  double listviewItemWidth = 215;
-  double listviewItemHeight = 80;
-  late Color color = Colors.white;
+  Color color = Colors.white;
   int selectedCompanyMode = 0;
   bool showDialogMonth = false;
   Offset currentItemPostion = const Offset(0, 0);
@@ -60,15 +58,15 @@ class MainViewModel extends BaseViewModel {
       bool pointerDown, int index, int listViewIndex, Offset localPosition) {
     if (pointerDown) {
       showDialogScreenMode = -1;
-
-      selectedListView = listViewIndex;
+      selectedListView = -1;
       dialogAnim = Tween(
         begin: const Offset(0, 1),
         end: const Offset(0, 0),
       ).animate(CurvedAnimation(
           parent: dialogController, curve: Curves.fastOutSlowIn));
       selectedCompanyIndex = index;
-      controller.forward();
+      listViewItemController.forward();
+      selectedListView = listViewIndex;
       timer = Timer(
         const Duration(milliseconds: 1000),
         () async {
@@ -89,7 +87,8 @@ class MainViewModel extends BaseViewModel {
       );
     } else {
       timer.cancel();
-      controller.reverse();
+      listViewItemController.reverse();
+      selectedListView = -1;
     }
     notifyListeners();
   }
@@ -106,6 +105,7 @@ class MainViewModel extends BaseViewModel {
   }
 
   void dialogOnDismissedFun() {
+    selectedListView = -1;
     showDialogScreenMode = -1;
     blurOutsideDialog = false;
     selectedItem = 0;
@@ -121,7 +121,7 @@ class MainViewModel extends BaseViewModel {
       duration: const Duration(milliseconds: 1100),
       vsync: provider,
     );
-    controller = AnimationController(
+    listViewItemController = AnimationController(
       duration: const Duration(milliseconds: 100),
       vsync: provider,
     );
@@ -131,8 +131,10 @@ class MainViewModel extends BaseViewModel {
       vsync: provider,
     );
 
-    animation = Tween(begin: 1.0, end: 0.8).animate(controller);
-    defaultAnimation = Tween(begin: 1.0, end: 1.0).animate(controller);
+    listViewItemScaleAnimation =
+        Tween(begin: 1.0, end: 0.8).animate(listViewItemController);
+    listViewItemDefualtAnimation =
+        Tween(begin: 1.0, end: 1.0).animate(listViewItemController);
     firstRightToLeftAnimController = AnimationController(
       vsync: provider,
       duration: const Duration(milliseconds: 800),
@@ -180,7 +182,6 @@ class MainViewModel extends BaseViewModel {
 
     Future.delayed(const Duration(milliseconds: 100)).then((value) async {
       height = 300;
-
       notifyListeners();
     });
 
@@ -207,8 +208,6 @@ class MainViewModel extends BaseViewModel {
 
   List<FlSpot> addChartDataValueToFlSpot() {
     List<FlSpot> flSpot = [];
-
-    // if (selectedListView == 0) {
     for (var element in selectedListView == 0
         ? companyList[selectedCompanyIndex].chardData[selectedItem].data
         : companyList
@@ -220,31 +219,6 @@ class MainViewModel extends BaseViewModel {
             .data) {
       flSpot.add(FlSpot(element.x, element.y));
     }
-    // } else if (selectedListView == 1) {
-    //   for (var element in companyList
-    //       .where((element) => element.hasBenefit)
-    //       .toList()[selectedCompanyIndex]
-    //       .chardData[selectedCompanyIndex]
-    //       .data) {
-    //     flSpot.add(FlSpot(element.x, element.y));
-    //   }
-    // } else {
-    //   for (var element in companyList
-    //       .where((element) => !element.hasBenefit)
-    //       .toList()[selectedCompanyIndex]
-    //       .chardData[selectedCompanyIndex]
-    //       .data) {
-    //     flSpot.add(FlSpot(element.x, element.y));
-    //   }
-    // }
-    // for (var element in companyList[  selectedCompanyIndex]
-    //   .chardData[selectedItem]
-    //   .data) {
-    // flSpot.add(
-    //   FlSpot(element.x, element.y),
-    // );
-    // }
-
     return flSpot;
   }
 }
