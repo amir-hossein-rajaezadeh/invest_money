@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:invest_money/data/company.dart';
@@ -209,8 +208,8 @@ class MainViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  List<FlSpot> addChartDataValueToFlSpot() {
-    List<FlSpot> flSpot = [];
+  List<ChartDataItem> addChartDataValueToFlSpot() {
+    List<ChartDataItem> flSpot = [];
     for (var element in selectedListView == 0
         ? companyList[selectedCompanyIndex].chardData[selectedItem].data
         : companyList
@@ -220,7 +219,7 @@ class MainViewModel extends BaseViewModel {
             .toList()[selectedCompanyIndex]
             .chardData[selectedItem]
             .data) {
-      flSpot.add(FlSpot(element.x, element.y));
+      flSpot.add(ChartDataItem(x: element.x, y: element.y));
     }
     return flSpot;
   }

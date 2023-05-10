@@ -3,8 +3,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:invest_money/screens/main/view_model/main_view_model.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 // import 'package:syncfusion_flutter_charts/sparkcharts.dart';
-import 'package:fl_chart/fl_chart.dart';
 
 import '../../../data/company.dart';
 
@@ -606,72 +606,105 @@ class _MainBodyState extends ConsumerState<MainBody>
                       ),
                     ),
                     Container(
-                        alignment: Alignment.topLeft,
-                        height: 180,
-                        margin: const EdgeInsets.only(
-                            top: 30, bottom: 10, left: 20, right: 20),
-                        child: LineChart(LineChartData(
-                          lineTouchData: LineTouchData(
-                            handleBuiltInTouches: true,
-                            touchTooltipData: LineTouchTooltipData(
-                              tooltipBgColor: Colors.blueGrey.withOpacity(0.8),
-                            ),
-                          ),
-                          gridData: FlGridData(show: false),
-                          titlesData: FlTitlesData(
-                            topTitles: AxisTitles(
-                              sideTitles: SideTitles(showTitles: false),
-                            ),
-                            bottomTitles: AxisTitles(
-                              sideTitles: SideTitles(showTitles: false),
-                            ),
-                            rightTitles: AxisTitles(
-                              sideTitles: SideTitles(showTitles: false),
-                            ),
-                            leftTitles: AxisTitles(
-                              sideTitles: SideTitles(showTitles: false),
-                            ),
-                          ),
-                          borderData: FlBorderData(show: false),
-                          lineBarsData: <LineChartBarData>[
-                            LineChartBarData(
-                                isCurved: true,
-                                color: const Color(0xFF968cb7),
-                                barWidth: 4,
-                                isStrokeCapRound: true,
-                                dotData: FlDotData(show: false),
-                                belowBarData: BarAreaData(show: false),
-                                spots:
-                                    mainViewModel.addChartDataValueToFlSpot())
-                          ],
-                        ))
+                      alignment: Alignment.topLeft,
+                      height: 180,
+                      margin: const EdgeInsets.only(
+                          top: 30, bottom: 10, left: 20, right: 20),
+                      child:
+                          // LineChart(LineChartData(
+                          //   lineTouchData: LineTouchData(
+                          //     handleBuiltInTouches: true,
+                          //     touchTooltipData: LineTouchTooltipData(
+                          //       tooltipBgColor: Colors.blueGrey.withOpacity(0.8),
+                          //     ),
+                          //   ),
+                          //   gridData: FlGridData(show: false),
+                          //   titlesData: FlTitlesData(
+                          //     topTitles: AxisTitles(
+                          //       sideTitles: SideTitles(showTitles: false),
+                          //     ),
+                          //     bottomTitles: AxisTitles(
+                          //       sideTitles: SideTitles(showTitles: false),
+                          //     ),
+                          //     rightTitles: AxisTitles(
+                          //       sideTitles: SideTitles(showTitles: false),
+                          //     ),
+                          //     leftTitles: AxisTitles(
+                          //       sideTitles: SideTitles(showTitles: false),
+                          //     ),
+                          //   ),
+                          //   borderData: FlBorderData(show: false),
+                          //   lineBarsData: <LineChartBarData>[
+                          //     LineChartBarData(
+                          //         isCurved: true,
+                          //         color: const Color(0xFF968cb7),
+                          //         barWidth: 4,
+                          //         isStrokeCapRound: true,
+                          //         dotData: FlDotData(show: false),
+                          //         belowBarData: BarAreaData(show: false),
+                          //         spots:
+                          //             mainViewModel.addChartDataValueToFlSpot())
+                          //   ],
+                          // ))
 
-// SfCartesianChart(
-//         plotAreaBorderWidth: 0,
-//         primaryXAxis:
-//             NumericAxis(majorGridLines: const MajorGridLines(width: 0)),
-//         primaryYAxis: NumericAxis(
-//             majorTickLines: const MajorTickLines(color: Colors.transparent),
-//             axisLine: const AxisLine(width: 0),
-//             minimum: 0,
-//             maximum: 100),
-//         series: <LineSeries<ChartDataItem, num>>[
-//       LineSeries<ChartDataItem, num>(
-//           dataSource: _chartData!,
-//           xValueMapper: (_ChartData sales, _) => sales.x,
-//           yValueMapper: (_ChartData sales, _) => sales.y,
-//           markerSettings: const MarkerSettings(isVisible: true))
-//     ])
+                          // SfCartesianChart(
+                          //     plotAreaBorderWidth: 0,
+                          //     // enableAxisAnimation: true,
+                          //     primaryXAxis: CategoryAxis(),
+                          //     primaryYAxis: NumericAxis(
+                          //         isVisible: false,
+                          //         axisLine: const AxisLine(width: 0),
+                          //         minimum: 0,
+                          //         maximum: 20),
+                          //     series: <LineSeries<ChartDataItem, num>>[
+                          //   LineSeries<ChartDataItem, num>(
+                          //       dataSource:
+                          //           mainViewModel.addChartDataValueToFlSpot(),
+                          //       xValueMapper: (ChartDataItem sales, _) =>
+                          //           sales.x,
+                          //       yValueMapper: (ChartDataItem sales, _) =>
+                          //           sales.y,
+                          //       animationDuration: 1500,
+                          //       width: 3,
+                          //       color: const Color(0xFF968cb7),
+                          //       // animationDelay: 200,
+                          //       markerSettings:
+                          //           const MarkerSettings(isVisible: false))
+                          // ])
 
-                        // SfSparkLineChart(
-                        //   axisLineColor: Colors.transparent,
-                        //   data:
-                        //       company.chardData[mainViewModel.selectedItem].data,
-                        //   trackball: const SparkChartTrackball(
-                        //       color: Colors.white,
-                        //       activationMode: SparkChartActivationMode.tap),
-                        // ),
-                        ),
+                          SfCartesianChart(
+                              plotAreaBorderWidth: 0,
+                              // enableAxisAnimation: true,
+                              primaryXAxis: NumericAxis(isVisible: false),
+                              primaryYAxis: NumericAxis(
+                                  isVisible: false,
+                                  axisLine: const AxisLine(width: 0),
+                                  minimum: 0,
+                                  maximum: 22),
+                              series: <SplineSeries<ChartDataItem, num>>[
+                            SplineSeries<ChartDataItem, num>(
+                              splineType: SplineType.natural,
+                              dataSource:
+                                  mainViewModel.addChartDataValueToFlSpot(),
+                              xValueMapper: (ChartDataItem sales, _) => sales.x,
+                              yValueMapper: (ChartDataItem sales, _) => sales.y,
+                              animationDuration: 1500,
+                              width: 3,
+                              color: const Color(0xFF968cb7),
+                              // animationDelay: 200,
+                            )
+                          ]),
+                    ),
+
+                    // SfSparkLineChart(
+                    //   axisLineColor: Colors.transparent,
+                    //   data:
+                    //       company.chardData[mainViewModel.selectedItem].data,
+                    //   trackball: const SparkChartTrackball(
+                    //       color: Colors.white,
+                    //       activationMode: SparkChartActivationMode.tap),
+                    // ),
+                    // ),
                     Container(
                       margin: const EdgeInsets.only(left: 16, top: 15),
                       child: Row(
