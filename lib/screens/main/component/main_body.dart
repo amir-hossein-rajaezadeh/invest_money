@@ -1,11 +1,8 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:invest_money/screens/main/view_model/main_view_model.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-// import 'package:syncfusion_flutter_charts/sparkcharts.dart';
-
 import '../../../data/company.dart';
 
 class MainBody extends ConsumerStatefulWidget {
@@ -21,20 +18,21 @@ class _MainBodyState extends ConsumerState<MainBody>
   void dispose() {
     final mainViewModel = ref.watch(mainViewModelProvider);
 
-    mainViewModel.firstScrollController.dispose();
-    mainViewModel.secondScrollController.dispose();
+    mainViewModel.benefitedStoksScrollController.dispose();
+    mainViewModel.unBenefitedStoksScrollController.dispose();
     super.dispose();
   }
 
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final mainViewModel = ref.watch(mainViewModelProvider);
-      mainViewModel.setInitStateAnim(this);
-      await Future.delayed(const Duration(milliseconds: 700));
-      mainViewModel.boxesController.forward();
-      print("test data ");
-    });
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) async {
+        final mainViewModel = ref.watch(mainViewModelProvider);
+        mainViewModel.setInitStateAnim(this);
+        await Future.delayed(const Duration(milliseconds: 700));
+        mainViewModel.boxesController.forward();
+      },
+    );
 
     super.initState();
   }
@@ -52,7 +50,7 @@ class _MainBodyState extends ConsumerState<MainBody>
             children: [
               firstWidget(mainViewModel.height, mainViewModel),
               secondWidget(width, height, mainViewModel),
-              listViews(mainViewModel.showListView, mainViewModel),
+              listViews(mainViewModel.showAllStoksListView, mainViewModel),
             ],
           ),
           dismissableDilog(width, mainViewModel),
@@ -172,7 +170,7 @@ class _MainBodyState extends ConsumerState<MainBody>
   Widget secondWidget(
       double width, double height, MainViewModel mainViewModel) {
     return SlideTransition(
-      position: mainViewModel.leftBoxAnim,
+      position: mainViewModel.leftBoxAnimation,
       child: Container(
         margin: const EdgeInsets.only(right: 5, left: 5, top: 12),
         child:
@@ -215,46 +213,39 @@ class _MainBodyState extends ConsumerState<MainBody>
             ),
           ),
           SlideTransition(
-            position: mainViewModel.rightBoxAnim,
-            child: InkWell(
-              onTap: () {
-                setState(() {
-                  mainViewModel.height = height / 2 - 120;
-                });
-              },
-              child: Container(
-                width: width / 2 - 10,
-                height: height * .18,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(40),
-                    color: const Color(0xFF0a0720)),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      "Withdraw",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.white, fontSize: 18),
+            position: mainViewModel.rightBoxAnimation,
+            child: Container(
+              width: width / 2 - 10,
+              height: height * .18,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(40),
+                  color: const Color(0xFF0a0720)),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    "Withdraw",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                  Container(
+                    width: 10,
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.white, width: 1.5),
+                      borderRadius: BorderRadius.circular(7),
                     ),
-                    Container(
-                      width: 10,
+                    child: Container(
+                      margin: const EdgeInsets.all(3),
+                      child: const Icon(
+                        Icons.arrow_outward,
+                        size: 14,
+                        color: Colors.white,
+                      ),
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.white, width: 1.5),
-                        borderRadius: BorderRadius.circular(7),
-                      ),
-                      child: Container(
-                        margin: const EdgeInsets.all(3),
-                        child: const Icon(
-                          Icons.arrow_outward,
-                          size: 14,
-                          color: Colors.white,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
+                  )
+                ],
               ),
             ),
           ),
@@ -267,7 +258,7 @@ class _MainBodyState extends ConsumerState<MainBody>
     return Column(
       children: [
         SlideTransition(
-          position: mainViewModel.rightToLeftListviewAnim,
+          position: mainViewModel.allStoksListviewAnimation,
           child: Container(
             height: 80,
             margin: const EdgeInsets.only(top: 20),
@@ -287,7 +278,7 @@ class _MainBodyState extends ConsumerState<MainBody>
                 margin: const EdgeInsets.only(top: 20),
                 child: ListView.builder(
                   shrinkWrap: true,
-                  controller: mainViewModel.firstScrollController,
+                  controller: mainViewModel.benefitedStoksScrollController,
                   physics: const BouncingScrollPhysics(),
                   scrollDirection: Axis.horizontal,
                   itemCount:
@@ -298,7 +289,7 @@ class _MainBodyState extends ConsumerState<MainBody>
                 ),
               )
             : SlideTransition(
-                position: mainViewModel.firstRightToLeftAnim,
+                position: mainViewModel.benefitedStoorksListAnimation,
                 child: Container(
                   margin: const EdgeInsets.only(top: 20),
                   width: 215,
@@ -308,7 +299,7 @@ class _MainBodyState extends ConsumerState<MainBody>
                     gradient: LinearGradient(
                         begin: Alignment.topRight,
                         end: Alignment.topLeft,
-                        colors: mainViewModel.benefitColorList),
+                        colors: mainViewModel.benefitedFirstItemColorList),
                   ),
                 ),
               ),
@@ -317,7 +308,7 @@ class _MainBodyState extends ConsumerState<MainBody>
                 height: 80,
                 margin: const EdgeInsets.only(top: 15),
                 child: ListView.builder(
-                  controller: mainViewModel.secondScrollController,
+                  controller: mainViewModel.unBenefitedStoksScrollController,
                   shrinkWrap: true,
                   physics: const BouncingScrollPhysics(),
                   scrollDirection: Axis.horizontal,
@@ -328,7 +319,7 @@ class _MainBodyState extends ConsumerState<MainBody>
                 ),
               )
             : SlideTransition(
-                position: mainViewModel.secondRightToLeftAnim,
+                position: mainViewModel.unBenefitedStoorksListAnimation,
                 child: Container(
                   margin: const EdgeInsets.only(top: 15),
                   width: 215,
@@ -338,7 +329,7 @@ class _MainBodyState extends ConsumerState<MainBody>
                     gradient: LinearGradient(
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
-                        colors: mainViewModel.unBenefitColorList),
+                        colors: mainViewModel.unBenefitLastItemColorList),
                   ),
                 ),
               )
@@ -468,8 +459,8 @@ class _MainBodyState extends ConsumerState<MainBody>
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                       colors: listViewIndex == 1
-                          ? mainViewModel.benefitColorList
-                          : mainViewModel.unBenefitColorList),
+                          ? mainViewModel.benefitedFirstItemColorList
+                          : mainViewModel.unBenefitLastItemColorList),
                 ),
                 child: Row(
                   children: const [],
@@ -494,7 +485,7 @@ class _MainBodyState extends ConsumerState<MainBody>
           )
         : mainViewModel.showDialogScreenMode == 1
             ? SlideTransition(
-                position: mainViewModel.dialogAnim,
+                position: mainViewModel.dialogAnimation,
                 child: ScaleTransition(
                   scale: mainViewModel.dialogScaleController,
                   child: dialogUI(mainViewModel, width, company),
@@ -586,7 +577,7 @@ class _MainBodyState extends ConsumerState<MainBody>
                     Container(
                       margin: const EdgeInsets.only(top: 30),
                       child: Text(
-                        company.price.toString(),
+                        "\$${company.price.toString()}",
                         style:
                             const TextStyle(fontSize: 28, color: Colors.white),
                       ),
@@ -610,101 +601,27 @@ class _MainBodyState extends ConsumerState<MainBody>
                       height: 180,
                       margin: const EdgeInsets.only(
                           top: 30, bottom: 10, left: 20, right: 20),
-                      child:
-                          // LineChart(LineChartData(
-                          //   lineTouchData: LineTouchData(
-                          //     handleBuiltInTouches: true,
-                          //     touchTooltipData: LineTouchTooltipData(
-                          //       tooltipBgColor: Colors.blueGrey.withOpacity(0.8),
-                          //     ),
-                          //   ),
-                          //   gridData: FlGridData(show: false),
-                          //   titlesData: FlTitlesData(
-                          //     topTitles: AxisTitles(
-                          //       sideTitles: SideTitles(showTitles: false),
-                          //     ),
-                          //     bottomTitles: AxisTitles(
-                          //       sideTitles: SideTitles(showTitles: false),
-                          //     ),
-                          //     rightTitles: AxisTitles(
-                          //       sideTitles: SideTitles(showTitles: false),
-                          //     ),
-                          //     leftTitles: AxisTitles(
-                          //       sideTitles: SideTitles(showTitles: false),
-                          //     ),
-                          //   ),
-                          //   borderData: FlBorderData(show: false),
-                          //   lineBarsData: <LineChartBarData>[
-                          //     LineChartBarData(
-                          //         isCurved: true,
-                          //         color: const Color(0xFF968cb7),
-                          //         barWidth: 4,
-                          //         isStrokeCapRound: true,
-                          //         dotData: FlDotData(show: false),
-                          //         belowBarData: BarAreaData(show: false),
-                          //         spots:
-                          //             mainViewModel.addChartDataValueToFlSpot())
-                          //   ],
-                          // ))
-
-                          // SfCartesianChart(
-                          //     plotAreaBorderWidth: 0,
-                          //     // enableAxisAnimation: true,
-                          //     primaryXAxis: CategoryAxis(),
-                          //     primaryYAxis: NumericAxis(
-                          //         isVisible: false,
-                          //         axisLine: const AxisLine(width: 0),
-                          //         minimum: 0,
-                          //         maximum: 20),
-                          //     series: <LineSeries<ChartDataItem, num>>[
-                          //   LineSeries<ChartDataItem, num>(
-                          //       dataSource:
-                          //           mainViewModel.addChartDataValueToFlSpot(),
-                          //       xValueMapper: (ChartDataItem sales, _) =>
-                          //           sales.x,
-                          //       yValueMapper: (ChartDataItem sales, _) =>
-                          //           sales.y,
-                          //       animationDuration: 1500,
-                          //       width: 3,
-                          //       color: const Color(0xFF968cb7),
-                          //       // animationDelay: 200,
-                          //       markerSettings:
-                          //           const MarkerSettings(isVisible: false))
-                          // ])
-
-                          SfCartesianChart(
-                              plotAreaBorderWidth: 0,
-                              // enableAxisAnimation: true,
-                              primaryXAxis: NumericAxis(isVisible: false),
-                              primaryYAxis: NumericAxis(
-                                  isVisible: false,
-                                  axisLine: const AxisLine(width: 0),
-                                  minimum: 0,
-                                  maximum: 22),
-                              series: <SplineSeries<ChartDataItem, num>>[
-                            SplineSeries<ChartDataItem, num>(
-                              splineType: SplineType.natural,
-                              dataSource:
-                                  mainViewModel.addChartDataValueToFlSpot(),
-                              xValueMapper: (ChartDataItem sales, _) => sales.x,
-                              yValueMapper: (ChartDataItem sales, _) => sales.y,
-                              animationDuration: 1500,
-                              width: 3,
-                              color: const Color(0xFF968cb7),
-                              // animationDelay: 200,
-                            )
-                          ]),
+                      child: SfCartesianChart(
+                        trackballBehavior: mainViewModel.trackballBehavior,
+                        plotAreaBorderWidth: 0,
+                        primaryXAxis: NumericAxis(isVisible: false),
+                        primaryYAxis: NumericAxis(
+                          isVisible: false,
+                        ),
+                        series: <SplineSeries<ChartDataItem, num>>[
+                          SplineSeries<ChartDataItem, num>(
+                            splineType: SplineType.natural,
+                            dataSource:
+                                mainViewModel.addChartDataValueToChartList(),
+                            xValueMapper: (ChartDataItem sales, _) => sales.x,
+                            yValueMapper: (ChartDataItem sales, _) => sales.y,
+                            animationDuration: 1500,
+                            width: 3,
+                            color: const Color(0xFF968cb7),
+                          )
+                        ],
+                      ),
                     ),
-
-                    // SfSparkLineChart(
-                    //   axisLineColor: Colors.transparent,
-                    //   data:
-                    //       company.chardData[mainViewModel.selectedItem].data,
-                    //   trackball: const SparkChartTrackball(
-                    //       color: Colors.white,
-                    //       activationMode: SparkChartActivationMode.tap),
-                    // ),
-                    // ),
                     Container(
                       margin: const EdgeInsets.only(left: 16, top: 15),
                       child: Row(
@@ -737,15 +654,16 @@ class _MainBodyState extends ConsumerState<MainBody>
                         ],
                       ),
                     ),
-                    mainViewModel.showDialogMonth
+                    mainViewModel.showDialogMonths
                         ? Container(
                             margin: const EdgeInsets.only(top: 20),
                             height: 30,
                             child: ListView.builder(
                               scrollDirection: Axis.horizontal,
-                              itemCount: mainViewModel.timeList.length,
+                              itemCount: mainViewModel.dialogTimeList.length,
                               itemBuilder: (context, index) {
-                                String title = mainViewModel.timeList[index];
+                                String title =
+                                    mainViewModel.dialogTimeList[index];
                                 return AnimatedContainer(
                                   duration: const Duration(seconds: 1),
                                   decoration: BoxDecoration(
