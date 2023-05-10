@@ -82,88 +82,90 @@ class _MainBodyState extends ConsumerState<MainBody>
                 Color(0xFF051ed9),
               ],
             )),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(top: 23, left: 12),
-                  child: Column(
-                    children: const [
-                      Text(
-                        "Hello, Amir!",
-                        style: TextStyle(
-                            fontSize: 30,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w400),
-                      ),
-                      SizedBox(
-                        height: 8,
-                      ),
-                      Text(
-                        "Let's invest together!",
-                        style: TextStyle(
-                            fontSize: 15,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w200),
-                      )
-                    ],
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(right: 16, top: 12),
-                  width: 60,
-                  height: 60,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(100),
-                    child: Image.asset(
-                      "assets/images/user_prof.jpeg",
-                      fit: BoxFit.cover,
+        child: SingleChildScrollView(
+          physics: const NeverScrollableScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(top: 23, left: 12),
+                    child: Column(
+                      children: const [
+                        Text(
+                          "Hello, Amir!",
+                          style: TextStyle(
+                              fontSize: 30,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w400),
+                        ),
+                        SizedBox(
+                          height: 8,
+                        ),
+                        Text(
+                          "Let's invest together!",
+                          style: TextStyle(
+                              fontSize: 15,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w200),
+                        )
+                      ],
                     ),
                   ),
-                )
-              ],
-            ),
-            Column(
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(left: 20, bottom: 30),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "\$25 800",
-                        style: TextStyle(
-                            fontSize: 50,
-                            color: Colors.white.withOpacity(0.8),
-                            fontWeight: FontWeight.w400),
+                  Container(
+                    margin: const EdgeInsets.only(right: 16, top: 12),
+                    width: 60,
+                    height: 60,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(100),
+                      child: Image.asset(
+                        "assets/images/user_prof.jpeg",
+                        fit: BoxFit.cover,
                       ),
-                      Container(
-                        margin: const EdgeInsets.only(top: 15),
-                        width: 80,
-                        height: 35,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100),
-                          color: Colors.white.withOpacity(0.4),
+                    ),
+                  )
+                ],
+              ),
+              const SizedBox(
+                height: 80,
+              ),
+              Container(
+                alignment: Alignment.topLeft,
+                margin: const EdgeInsets.only(left: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "\$25 800",
+                      style: TextStyle(
+                          fontSize: 50,
+                          color: Colors.white.withOpacity(0.8),
+                          fontWeight: FontWeight.w400),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(top: 15),
+                      width: 80,
+                      height: 35,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        color: Colors.white.withOpacity(0.4),
+                      ),
+                      child: Center(
+                        child: Text(
+                          "+\$620",
+                          style: TextStyle(
+                              color: Colors.white.withOpacity(0.9),
+                              fontSize: 18),
                         ),
-                        child: Center(
-                          child: Text(
-                            "+\$620",
-                            style: TextStyle(
-                                color: Colors.white.withOpacity(0.9),
-                                fontSize: 18),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
+                      ),
+                    )
+                  ],
                 ),
-              ],
-            )
-          ],
+              )
+            ],
+          ),
         ));
   }
 
@@ -394,12 +396,13 @@ class _MainBodyState extends ConsumerState<MainBody>
                             duration: const Duration(milliseconds: 400),
                             child: Image.asset(
                               company.companyLogo,
-                              color:
-                                  mainViewModel.selectedCompanyIndex == index &&
-                                          listViewIndex ==
-                                              mainViewModel.selectedListView
-                                      ? mainViewModel.color
-                                      : Colors.white.withOpacity(0.5),
+                              color: mainViewModel.selectedCompanyIndex ==
+                                          index &&
+                                      listViewIndex ==
+                                          mainViewModel
+                                              .selectedListViewLogooItemColor
+                                  ? mainViewModel.color
+                                  : Colors.white.withOpacity(0.5),
                             ),
                           )),
                         ),
@@ -642,6 +645,24 @@ class _MainBodyState extends ConsumerState<MainBody>
                                     mainViewModel.addChartDataValueToFlSpot())
                           ],
                         ))
+
+// SfCartesianChart(
+//         plotAreaBorderWidth: 0,
+//         primaryXAxis:
+//             NumericAxis(majorGridLines: const MajorGridLines(width: 0)),
+//         primaryYAxis: NumericAxis(
+//             majorTickLines: const MajorTickLines(color: Colors.transparent),
+//             axisLine: const AxisLine(width: 0),
+//             minimum: 0,
+//             maximum: 100),
+//         series: <LineSeries<ChartDataItem, num>>[
+//       LineSeries<ChartDataItem, num>(
+//           dataSource: _chartData!,
+//           xValueMapper: (_ChartData sales, _) => sales.x,
+//           yValueMapper: (_ChartData sales, _) => sales.y,
+//           markerSettings: const MarkerSettings(isVisible: true))
+//     ])
+
                         // SfSparkLineChart(
                         //   axisLineColor: Colors.transparent,
                         //   data:

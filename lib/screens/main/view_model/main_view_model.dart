@@ -43,6 +43,7 @@ class MainViewModel extends BaseViewModel {
   List<String> timeList = ["1D", "1W", "1M", "6M", "1Y"];
   int selectedListView = -1;
   bool blurOutsideDialog = false;
+  int selectedListViewLogooItemColor = -1;
   List<Color> benefitColorList = [
     const Color(0xFF3fdcd6),
     const Color(0xFF48eace),
@@ -59,6 +60,7 @@ class MainViewModel extends BaseViewModel {
     if (pointerDown) {
       showDialogScreenMode = -1;
       selectedListView = -1;
+      selectedListViewLogooItemColor = -1;
       dialogAnim = Tween(
         begin: const Offset(0, 1),
         end: const Offset(0, 0),
@@ -67,6 +69,7 @@ class MainViewModel extends BaseViewModel {
       selectedCompanyIndex = index;
       listViewItemController.forward();
       selectedListView = listViewIndex;
+      selectedListViewLogooItemColor = listViewIndex;
       timer = Timer(
         const Duration(milliseconds: 1000),
         () async {
@@ -88,7 +91,7 @@ class MainViewModel extends BaseViewModel {
     } else {
       timer.cancel();
       listViewItemController.reverse();
-      selectedListView = -1;
+      selectedListViewLogooItemColor = -1;
     }
     notifyListeners();
   }
