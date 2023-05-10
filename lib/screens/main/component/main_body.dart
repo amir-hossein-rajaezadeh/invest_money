@@ -119,7 +119,7 @@ class _MainBodyState extends ConsumerState<MainBody>
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(100),
                       child: Image.asset(
-                        "assets/images/user_prof.jpeg",
+                        "assets/images/user_prof.jpg",
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -506,7 +506,7 @@ class _MainBodyState extends ConsumerState<MainBody>
             gradient: const LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: [Colors.black, Color.fromARGB(255, 0, 6, 166)],
+              colors: [Color(0XFF04010f), Color.fromARGB(255, 0, 6, 166)],
               stops: [0.8, 1],
             ),
           ),

@@ -57,6 +57,8 @@ class MainViewModel extends BaseViewModel {
       bool pointerDown, int index, int listViewIndex, Offset localPosition) {
     // When ListView Item Holded:
     if (pointerDown) {
+      showDialogScreenMode = -1;
+
       dialogAnimation = Tween(
         begin: const Offset(0, 1),
         end: const Offset(0, 0),
@@ -68,6 +70,7 @@ class MainViewModel extends BaseViewModel {
       selectedCompanyIndex = index;
       selectedListView = listViewIndex;
       selectedListViewLogooItemColor = listViewIndex;
+      notifyListeners();
       timer = Timer(
         const Duration(milliseconds: 1000),
         () async {
@@ -100,8 +103,8 @@ class MainViewModel extends BaseViewModel {
   // When u hold Dialog for more than a second
   void dialogOnLongPress() {
     //Increease height of dialog
-    dialogHeight = 460;
-    // Show stock's timeList
+    dialogHeight = 470;
+    // Show stock's timeList at bottom of dialog
     showDialogMonths = true;
     notifyListeners();
   }
@@ -113,7 +116,6 @@ class MainViewModel extends BaseViewModel {
 
   void dialogOnDismissedFun() {
     // Reset all values when swip up/down dialog
-    selectedListView = -1;
     showDialogScreenMode = -1;
     blurOutsideDialog = false;
     selectedItem = 0;
