@@ -39,21 +39,24 @@ class _MainBodyState extends ConsumerState<MainBody>
     final mainViewModel = ref.watch(mainViewModelProvider);
     mainViewModel.isFirstTryFun(this);
 
-    return SingleChildScrollView(
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Column(
-            children: [
-              firstWidget(mainViewModel.height, mainViewModel),
-              secondWidget(width, height, mainViewModel),
-              listViews(mainViewModel.showAllStoksListView, mainViewModel),
-            ],
-          ),
-          dismissableDilog(width, mainViewModel),
-        ],
-      ),
-    );
+    return !mainViewModel.showLoading
+        ? SingleChildScrollView(
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Column(
+                  children: [
+                    firstWidget(mainViewModel.height, mainViewModel),
+                    secondWidget(width, height, mainViewModel),
+                    listViews(
+                        mainViewModel.showAllStoksListView, mainViewModel),
+                  ],
+                ),
+                dismissableDilog(width, mainViewModel),
+              ],
+            ),
+          )
+        : Container();
   }
 
   Widget firstWidget(double height, MainViewModel mainViewModel) {

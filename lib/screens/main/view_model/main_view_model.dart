@@ -26,6 +26,7 @@ class MainViewModel extends BaseViewModel {
   late AnimationController boxesController;
   late Animation<Offset> allStoksListviewAnimation;
   late AnimationController allStoksListviewController;
+  bool showLoading = true;
   int dialogMode = 0;
   int showDialogScreenMode = -1;
   var selectedCompanyIndex = 0;
@@ -123,6 +124,15 @@ class MainViewModel extends BaseViewModel {
     dialogHeight = 420;
     showDialogMonths = false;
     notifyListeners();
+  }
+
+  @override
+  Future<bool> setIsLoading() async {
+    showLoading = true;
+    await Future.delayed(const Duration(milliseconds: 50));
+    showLoading = false;
+    notifyListeners();
+    return showLoading;
   }
 
   void setInitStateAnim(TickerProvider provider) {
@@ -229,7 +239,7 @@ class MainViewModel extends BaseViewModel {
     if (isFirstTry) {
       isFirstTry = false;
       await Future.delayed(const Duration(milliseconds: 1));
-
+      setIsLoading();
       setInitStateAnim(provider);
 
       await Future.delayed(const Duration(milliseconds: 700));
