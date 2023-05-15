@@ -26,12 +26,7 @@ class _MainBodyState extends ConsumerState<MainBody>
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback(
-      (_) async {
-        final mainViewModel = ref.watch(mainViewModelProvider);
-        mainViewModel.setInitStateAnim(this);
-        await Future.delayed(const Duration(milliseconds: 700));
-        mainViewModel.boxesController.forward();
-      },
+      (_) async {},
     );
 
     super.initState();
@@ -42,6 +37,8 @@ class _MainBodyState extends ConsumerState<MainBody>
     double? height = MediaQuery.of(context).size.height;
     double? width = MediaQuery.of(context).size.width;
     final mainViewModel = ref.watch(mainViewModelProvider);
+    mainViewModel.isFirstTryFun(this);
+
     return SingleChildScrollView(
       child: Stack(
         alignment: Alignment.center,

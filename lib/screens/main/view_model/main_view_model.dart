@@ -40,6 +40,7 @@ class MainViewModel extends BaseViewModel {
   List<String> dialogTimeList = ["1D", "1W", "1M", "6M", "1Y"];
   int selectedListView = -1;
   bool blurOutsideDialog = false;
+  bool isFirstTry = true;
   int selectedListViewLogooItemColor = -1;
   List<Color> benefitedFirstItemColorList = [
     const Color(0xFF3fdcd6),
@@ -222,6 +223,21 @@ class MainViewModel extends BaseViewModel {
     });
 
     notifyListeners();
+  }
+
+  Future<bool> isFirstTryFun(TickerProvider provider) async {
+    if (isFirstTry) {
+      isFirstTry = false;
+      await Future.delayed(const Duration(milliseconds: 1));
+
+      setInitStateAnim(provider);
+
+      await Future.delayed(const Duration(milliseconds: 700));
+      boxesController.forward();
+      notifyListeners();
+    }
+
+    return isFirstTry;
   }
 
   List<ChartDataItem> addChartDataValueToChartList() {
