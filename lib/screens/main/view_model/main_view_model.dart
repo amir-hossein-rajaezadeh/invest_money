@@ -72,13 +72,15 @@ class MainViewModel extends BaseViewModel {
       selectedCompanyIndex = index;
       selectedListView = listViewIndex;
       selectedListViewLogooItemColor = listViewIndex;
-      notifyListeners();
+      // notifyListeners();
+
       timer = Timer(
         const Duration(milliseconds: 1000),
         () async {
           // Change view from SlideTranstion and ScaleTrantion to Dismissble widget
           showDialogScreenMode = 1;
           notifyListeners();
+
           dialogScaleController
             ..reset()
             ..forward();
@@ -96,10 +98,13 @@ class MainViewModel extends BaseViewModel {
       // If Item has NOT been hoolded for a second, then reset all values cuz at least it should be hoolded for a second to function
       selectedListViewLogooItemColor = -1;
       timer.cancel();
-      // Change the size of small button to it original by reversibng controller
+      // Change the size of small button to it original by reversing controller
       listViewItemController.reverse();
     }
-    notifyListeners();
+    if (showDialogScreenMode != -1) {
+    } else {
+      notifyListeners();
+    }
   }
 
   // When u hold Dialog for more than a second
